@@ -20,7 +20,7 @@ public class OpenAPIConfig {
                         .addSecuritySchemes("bearer-key",
                                 new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
                 .info(new Info()
-                        .title("Scraatch API")
+                        .title("Scratch API")
                         .version(appVersion)
                         .description(appDescription)
                         .termsOfService("https://swagger.io/terms/")
