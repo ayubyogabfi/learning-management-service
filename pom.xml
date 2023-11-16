@@ -14,9 +14,7 @@
     <artifactId>api</artifactId>
     <version>1.0.0</version>
     <name>rest-api-spring-boot</name>
-    <description>RESTful API built with Spring Boot, Spring Security with JWT, JPA, PostgreSQL, validations, custom
-        error handling and OpenAPI 3 for documentation.
-    </description>
+    <description>Training project API</description>
     <properties>
         <java.version>11</java.version>
         <prettier-maven-plugin.version>0.18</prettier-maven-plugin.version>

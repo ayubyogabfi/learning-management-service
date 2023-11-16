@@ -44,17 +44,6 @@ public class UserController {
         return ResponseEntity.ok().body(userService.findAll());
     }
 
-    @Operation(summary = "Get a user by id", description = "Get a user by id description")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User successfully obtained"),
-            @ApiResponse(responseCode = "404", description = "User not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-    })
-    @GetMapping(path = "/{userId}")
-    public ResponseEntity<User> findById(@PathVariable Integer userId) {
-        return ResponseEntity.ok().body(userService.findById(userId));
-    }
-
     @Operation(summary = "Create a user", description = "Create a user description")
     @ApiResponse(responseCode = "201", description = "User successfully created")
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
@@ -64,42 +53,5 @@ public class UserController {
                 .path(FlowConstants.USERS_PATH + "/" + userCreated.getUserId()).toUriString());
         log.info(USER_CREATED_LOG, userCreated);
         return ResponseEntity.created(uri).body(userCreated);
-    }
-
-    @Operation(summary = "Update a user", description = "Update a user description")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User successfully updated"),
-            @ApiResponse(responseCode = "404", description = "User not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-    })
-    @PutMapping(path = "/{userId}", consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> update(@PathVariable Integer userId, @Valid @RequestBody UserDto user) {
-        final User userUpdated = userService.update(userId, user);
-        log.info(USER_UPDATED_LOG, userUpdated.toString());
-        return ResponseEntity.ok(userUpdated);
-    }
-
-    @Operation(summary = "Add role to user", description = "Add role to user description")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Role successfully added to user"),
-            @ApiResponse(responseCode = "404", description = "User or role not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-    })
-    @PatchMapping(path = "/{userId}" + FlowConstants.ROLES_PATH + "/{roleName}")
-    public ResponseEntity<Role> addRoleToUser(@PathVariable Integer userId, @PathVariable String roleName) {
-        userService.addRoleByUserId(userId, roleName);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Operation(summary = "Delete a user", description = "Delete a user description")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "User successfully deleted"),
-            @ApiResponse(responseCode = "404", description = "User not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-    })
-    @DeleteMapping(path = "/{userId}")
-    public ResponseEntity<Void> delete(@PathVariable Integer userId) {
-        userService.delete(userId);
-        return ResponseEntity.noContent().build();
     }
 }
