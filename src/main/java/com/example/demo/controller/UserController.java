@@ -1,16 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.constants.FlowConstants;
+import com.example.demo.constants.APIConstants;
 import com.example.demo.service.UserService;
-import com.example.demo.data.dto.ErrorResponse;
 import com.example.demo.data.dto.UserDto;
-import com.example.demo.data.model.Role;
 import com.example.demo.data.model.User;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +21,7 @@ import java.util.Collection;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping(path = FlowConstants.USERS_PATH, produces = APPLICATION_JSON_VALUE)
+@RequestMapping(path = APIConstants.USERS_PATH, produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
 @Slf4j
@@ -50,7 +45,7 @@ public class UserController {
     public ResponseEntity<User> create(@Valid @RequestBody UserDto user) {
         final User userCreated = userService.create(user);
         final URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(FlowConstants.USERS_PATH + "/" + userCreated.getUserId()).toUriString());
+                .path(APIConstants.USERS_PATH + "/" + userCreated.getUserId()).toUriString());
         log.info(USER_CREATED_LOG, userCreated);
         return ResponseEntity.created(uri).body(userCreated);
     }

@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.example.demo.constants.FlowConstants.REFRESH_TOKEN_PATH;
+import static com.example.demo.constants.APIConstants.REFRESH_TOKEN_PATH;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController

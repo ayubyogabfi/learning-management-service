@@ -1,7 +1,7 @@
 package com.example.demo.auth;
 
 import com.example.demo.constants.AppConstants;
-import com.example.demo.constants.FlowConstants;
+import com.example.demo.constants.APIConstants;
 import com.example.demo.constants.TokenConstants;
 import com.example.demo.util.JwtUtil;
 import com.example.demo.util.ResponseUtil;
@@ -29,7 +29,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         boolean isLoginOrRefresh =
-                request.getServletPath().equals(FlowConstants.LOGIN_PATH) || request.getServletPath().equals(FlowConstants.REFRESH_TOKEN_PATH);
+                request.getServletPath().equals(APIConstants.LOGIN_PATH) || request.getServletPath().equals(APIConstants.REFRESH_TOKEN_PATH);
         if (isLoginOrRefresh) {
             filterChain.doFilter(request, response);
             return;

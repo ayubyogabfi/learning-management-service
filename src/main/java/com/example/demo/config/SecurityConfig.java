@@ -1,7 +1,7 @@
 package com.example.demo.config;
 
 import com.example.demo.constants.AppConstants;
-import com.example.demo.constants.FlowConstants;
+import com.example.demo.constants.APIConstants;
 import com.example.demo.service.UserService;
 import com.example.demo.auth.JwtAuthenticationFilter;
 import com.example.demo.auth.JwtAuthorizationFilter;
@@ -27,13 +27,13 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String ROOT_ENTRY_POINT = "/";
-    private static final String SWAGGER_UI_ENTRY_POINT = FlowConstants.SWAGGER_UI_PATH + "/**";
-    private static final String SWAGGER_HTML_ENTRY_POINT = FlowConstants.SWAGGER_UI_PATH + ".html/**";
-    private static final String SWAGGER_RESOURCES_ENTRY_POINT = FlowConstants.SWAGGER_RESOURCES_PATH + "/**";
-    private static final String API_DOCS_ENTRY_POINT = FlowConstants.API_DOCS_PATH + "/**";
-    private static final String LOGIN_ENTRY_POINT = FlowConstants.LOGIN_PATH + "/**";
-    private static final String REFRESH_TOKEN_ENTRY_POINT = FlowConstants.REFRESH_TOKEN_PATH + "/**";
-    private static final String USERS_ENTRY_POINT = FlowConstants.USERS_PATH + "/**";
+    private static final String SWAGGER_UI_ENTRY_POINT = APIConstants.SWAGGER_UI_PATH + "/**";
+    private static final String SWAGGER_HTML_ENTRY_POINT = APIConstants.SWAGGER_UI_PATH + ".html/**";
+    private static final String SWAGGER_RESOURCES_ENTRY_POINT = APIConstants.SWAGGER_RESOURCES_PATH + "/**";
+    private static final String API_DOCS_ENTRY_POINT = APIConstants.API_DOCS_PATH + "/**";
+    private static final String LOGIN_ENTRY_POINT = APIConstants.LOGIN_PATH + "/**";
+    private static final String REFRESH_TOKEN_ENTRY_POINT = APIConstants.REFRESH_TOKEN_PATH + "/**";
+    private static final String USERS_ENTRY_POINT = APIConstants.USERS_PATH + "/**";
     private static final String ERROR_ENTRY_POINT = "/error";
 
     private final UserDetailsService userDetailsService;
@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         JwtAuthenticationFilter authenticationFilter = new JwtAuthenticationFilter(authenticationManagerBean(), userService);
         JwtAuthorizationFilter authorizationFilter = new JwtAuthorizationFilter();
 
-        authenticationFilter.setFilterProcessesUrl(FlowConstants.LOGIN_PATH);
+        authenticationFilter.setFilterProcessesUrl(APIConstants.LOGIN_PATH);
 
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);

@@ -1,6 +1,6 @@
 package com.example.demo.constants;
 
-public class FlowConstants {
+public class APIConstants {
     public final static String LOGIN_PATH = "/login";
     public final static String REFRESH_TOKEN_PATH = "/refresh-token";
     public final static String ROLES_PATH = "/roles";
