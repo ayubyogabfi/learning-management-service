@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.data.dto.RoleDto;
-import com.example.demo.data.model.Role;
+import com.example.demo.dto.RoleDto;
+import com.example.demo.entity.Role;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;

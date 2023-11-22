@@ -1,7 +1,9 @@
 // SectionController.java
 package com.example.demo.controller;
 
-import com.example.demo.data.model.Section;
+import com.example.demo.dto.SectionResponseData;
+import com.example.demo.dto.SectionResponses;
+import com.example.demo.entity.Section;
 import com.example.demo.service.SectionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -35,40 +37,10 @@ public class SectionController {
 
         List<Section> sections = sectionService.getAllSections();
 
-        List<SectionResponse> sectionResponses = sections.stream()
-                .map(section -> new SectionResponse(section.getTitle(), section.getBody()))
+        List<SectionResponseData> sectionResponsData = sections.stream()
+                .map(section -> new SectionResponseData(section.getTitle(), section.getBody()))
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(new ApiResponse<>(sectionResponses));
-    }
-
-    private static class ApiResponse<T> {
-        private final List<T> data;
-
-        public ApiResponse(List<T> data) {
-            this.data = data;
-        }
-
-        public List<T> getData() {
-            return data;
-        }
-    }
-
-    private static class SectionResponse {
-        private final String sectionTitle;
-        private final String body;
-
-        public SectionResponse(String sectionTitle, String body) {
-            this.sectionTitle = sectionTitle;
-            this.body = body;
-        }
-
-        public String getSectionTitle() {
-            return sectionTitle;
-        }
-
-        public String getBody() {
-            return body;
-        }
+        return ResponseEntity.ok(new SectionResponses<>(sectionResponsData));
     }
 }

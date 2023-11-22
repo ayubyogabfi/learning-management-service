@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.data.model.Section;
+import com.example.demo.entity.Section;
 
 import java.util.List;
 

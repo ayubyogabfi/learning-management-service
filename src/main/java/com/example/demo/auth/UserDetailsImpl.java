@@ -11,7 +11,7 @@ public class UserDetailsImpl extends User {
         super(username, "", authorities);
     }
 
-    public UserDetailsImpl(com.example.demo.data.model.User user, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(com.example.demo.entity.User user, Collection<? extends GrantedAuthority> authorities) {
         super(user.getUsername(), user.getPassword(), authorities);
     }
 }

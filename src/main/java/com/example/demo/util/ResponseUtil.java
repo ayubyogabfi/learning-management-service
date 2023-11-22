@@ -1,7 +1,7 @@
 package com.example.demo.util;
 
 import com.example.demo.constants.AppConstants;
-import com.example.demo.data.model.User;
+import com.example.demo.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.core.AuthenticationException;
 

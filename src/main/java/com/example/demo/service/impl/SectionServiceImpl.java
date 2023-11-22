@@ -1,6 +1,6 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.data.model.Section;
+import com.example.demo.entity.Section;
 import com.example.demo.repository.SectionRepository;
 import com.example.demo.service.SectionService;
 import org.springframework.beans.factory.annotation.Autowired;

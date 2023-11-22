@@ -1,13 +1,16 @@
-package com.example.demo.data.model;
+package com.example.demo.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.example.demo.entity.BaseEntity;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Section extends BaseEntity {
 
     @Id
@@ -20,10 +23,4 @@ public class Section extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String body;
 
-    @Column(name = "created_by")
-    private String createdBy;
-
-    // Other fields...
-
-    // Constructors, getters, setters...
 }

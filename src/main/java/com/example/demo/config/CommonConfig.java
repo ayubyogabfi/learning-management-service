@@ -1,8 +1,8 @@
 package com.example.demo.config;
 
 import com.example.demo.constants.AppConstants;
-import com.example.demo.data.dto.RoleDto;
-import com.example.demo.data.dto.UserDto;
+import com.example.demo.dto.RoleDto;
+import com.example.demo.dto.UserDto;
 import com.example.demo.service.RoleService;
 import com.example.demo.service.UserService;
 import org.modelmapper.ModelMapper;
