@@ -35,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String REFRESH_TOKEN_ENTRY_POINT = APIConstants.REFRESH_TOKEN_PATH + "/**";
     private static final String USERS_ENTRY_POINT = APIConstants.USERS_PATH + "/**";
     private static final String ERROR_ENTRY_POINT = "/error";
+    private static final String SECTION_ENTRY_POINT = APIConstants.SECTION_PATH + "/**";
 
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -69,7 +70,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         SWAGGER_RESOURCES_ENTRY_POINT,
                         LOGIN_ENTRY_POINT,
                         REFRESH_TOKEN_ENTRY_POINT,
-                        ERROR_ENTRY_POINT
+                        ERROR_ENTRY_POINT,
+                        SECTION_ENTRY_POINT
                 ).permitAll()
                 .antMatchers(POST, USERS_ENTRY_POINT).permitAll() // permit register
                 .antMatchers(GET, USERS_ENTRY_POINT).hasAnyAuthority(AppConstants.ROLE_USER)
