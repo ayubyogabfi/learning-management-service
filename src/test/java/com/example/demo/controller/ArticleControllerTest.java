@@ -1,16 +1,13 @@
 package com.example.demo.controller;
 
-import static org.mockito.Mockito.when;
 
 import com.example.demo.dto.SearchArticleRequest;
 import com.example.demo.repository.ArticleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
