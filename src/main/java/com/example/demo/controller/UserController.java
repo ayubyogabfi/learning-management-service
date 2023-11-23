@@ -2,8 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.constants.APIConstants;
 import com.example.demo.service.UserService;
-import com.example.demo.data.dto.UserDto;
-import com.example.demo.data.model.User;
+import com.example.demo.dto.UserDto;
+import com.example.demo.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

@@ -1,9 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.auth.UserDetailsImpl;
-import com.example.demo.data.dto.UserDto;
-import com.example.demo.data.model.Role;
-import com.example.demo.data.model.User;
+import com.example.demo.dto.UserDto;
+import com.example.demo.entity.Role;
+import com.example.demo.entity.User;
 import com.example.demo.exceptions.ConflictException;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.repository.UserRepository;

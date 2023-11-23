@@ -2,7 +2,7 @@ package com.example.demo.auth;
 
 import com.example.demo.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.example.demo.data.model.User;
+import com.example.demo.entity.User;
 import com.example.demo.util.JwtUtil;
 import com.example.demo.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;

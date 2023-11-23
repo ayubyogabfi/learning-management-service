@@ -1,11 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.constants.AppConstants;
-import com.example.demo.data.dto.ErrorResponse;
+import com.example.demo.dto.ErrorResponse;
 import com.example.demo.exceptions.BadRequestException;
 import com.example.demo.util.JwtUtil;
 import com.example.demo.util.ResponseUtil;
-import com.example.demo.data.model.User;
+import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
