@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class GeneralDataPaginationResponse<T> {
