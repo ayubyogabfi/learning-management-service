@@ -29,29 +29,6 @@ public class ArticleController {
         this.articleRepository = articleRepository;
     }
 
-    @Operation(security = {@SecurityRequirement(name = "bearer-key")}, summary = "Get article by keyword", description = "Get article by keyword")
-    @PostMapping("/search-article")
-    public ResponseEntity<GeneralDataPaginationResponse<Article>> searchArticle(
-            @Valid @RequestBody SearchArticleListBySectionTitleRequest request) {
-
-        if (request.getSectionTitle() == null || request.getSectionTitle().trim().length() < 3) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(GeneralDataPaginationResponse.<Article>builder()
-                            .pagination(new GeneralDataPaginationResponse.Pagination(0, 0))
-                            .data(null)
-                            .build());
-        }
-
-        List<Article> articles = articleRepository.findByArticleTitle(request.getSectionTitle());
-
-        GeneralDataPaginationResponse<Article> response = GeneralDataPaginationResponse.<Article>builder()
-                .pagination(new GeneralDataPaginationResponse.Pagination(2, 2))
-                .data(articles)
-                .build();
-
-        return ResponseEntity.ok(response);
-    }
-
     @Operation(security = {@SecurityRequirement(name = "bearer-key")}, summary = "Get articles by section title", description = "Get articles by section title")
     @GetMapping("/articles-by-section")
     public ResponseEntity<GeneralDataPaginationResponse<ArticleResponse>> getArticlesBySection(
