@@ -30,7 +30,7 @@ public class SectionController {
     }
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key") }, summary = "Get all section", description = "Get all section list")
-    @GetMapping("/all-section")
+    @GetMapping("/article-list")
     public ResponseEntity<GeneralDataPaginationResponse<SectionResponseData>> getAllSections() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String createdBy = (authentication == null) ? null : authentication.getName();

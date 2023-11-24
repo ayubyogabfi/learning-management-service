@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "tm_section")
 public class Section extends BaseEntity {
 
     @Id

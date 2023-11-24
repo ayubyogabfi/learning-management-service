@@ -1,12 +1,9 @@
-package com.example.demo.dto;
+package com.example.demo.entity;
 
 import com.example.demo.entity.BaseEntity;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -14,6 +11,7 @@ import javax.persistence.Id;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "tx_article")
 public class Article extends BaseEntity {
 
     @Id
