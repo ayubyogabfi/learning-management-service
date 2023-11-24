@@ -3,18 +3,15 @@ package com.example.demo.controller;
 import com.example.demo.dto.Article;
 import com.example.demo.dto.ArticleResponse;
 import com.example.demo.dto.GeneralDataPaginationResponse;
-import com.example.demo.dto.SearchArticleListBySectionTitleRequest;
 import com.example.demo.repository.ArticleRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
