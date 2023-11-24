@@ -9,8 +9,8 @@ import javax.validation.constraints.NotEmpty;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchArticleRequest {
+public class SearchArticleListBySectionTitleRequest {
 
-    @NotEmpty(message = "Article title must not be empty")
-    private String articleTitle;
+    @NotEmpty(message = "Section title must not be empty")
+    private String sectionTitle;
 }

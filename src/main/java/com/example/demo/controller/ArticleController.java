@@ -3,7 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.Article;
 import com.example.demo.dto.ArticleResponse;
 import com.example.demo.dto.GeneralDataPaginationResponse;
-import com.example.demo.dto.SearchArticleRequest;
+import com.example.demo.dto.SearchArticleListBySectionTitleRequest;
 import com.example.demo.repository.ArticleRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -32,9 +32,9 @@ public class ArticleController {
     @Operation(security = {@SecurityRequirement(name = "bearer-key")}, summary = "Get article by keyword", description = "Get article by keyword")
     @PostMapping("/search-article")
     public ResponseEntity<GeneralDataPaginationResponse<Article>> searchArticle(
-            @Valid @RequestBody SearchArticleRequest request) {
+            @Valid @RequestBody SearchArticleListBySectionTitleRequest request) {
 
-        if (request.getArticleTitle() == null || request.getArticleTitle().trim().length() < 3) {
+        if (request.getSectionTitle() == null || request.getSectionTitle().trim().length() < 3) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(GeneralDataPaginationResponse.<Article>builder()
                             .pagination(new GeneralDataPaginationResponse.Pagination(0, 0))
@@ -42,7 +42,7 @@ public class ArticleController {
                             .build());
         }
 
-        List<Article> articles = articleRepository.findByArticleTitle(request.getArticleTitle());
+        List<Article> articles = articleRepository.findByArticleTitle(request.getSectionTitle());
 
         GeneralDataPaginationResponse<Article> response = GeneralDataPaginationResponse.<Article>builder()
                 .pagination(new GeneralDataPaginationResponse.Pagination(2, 2))

@@ -11,6 +11,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     List<Article> findByArticleTitle(String articleTitle);
 
-    @Query("SELECT a FROM Article a WHERE a.section.title = :sectionTitle")
+    @Query("SELECT a FROM Article a WHERE a.sectionTitle = :sectionTitle")
     List<Article> findBySectionTitle(@Param("sectionTitle") String sectionTitle);
 }
