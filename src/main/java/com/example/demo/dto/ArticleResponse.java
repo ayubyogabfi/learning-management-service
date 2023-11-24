@@ -7,10 +7,9 @@ import lombok.*;
 @NoArgsConstructor
 public class ArticleResponse {
 
-    private String sectionTitle;
+  private String sectionTitle;
 
-    private String articleTitle;
+  private String articleTitle;
 
-    private String body;
-
+  private String body;
 }

@@ -1,8 +1,7 @@
 package com.example.demo.dto;
 
-import lombok.*;
-
 import javax.validation.constraints.NotEmpty;
+import lombok.*;
 
 @Getter
 @Setter
@@ -11,6 +10,6 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 public class SearchArticleRequest {
 
-    @NotEmpty(message = "Article title must not be empty")
-    private String articleTitle;
+  @NotEmpty(message = "Article title must not be empty")
+  private String articleTitle;
 }

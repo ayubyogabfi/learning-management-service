@@ -1,6 +1,6 @@
 ### LOGIN USER
 
-POST http://localhost:8080/api/login
+POST http://localhost:8080/learning-management-system/v1/login
 content-type: application/json
 
 {
@@ -10,7 +10,7 @@ content-type: application/json
 
 ### LOGIN USER bad
 
-POST http://localhost:8080/api/login
+POST http://localhost:8080/learning-management-system/v1/login
 
 {
   "username": "ayubyoga",
