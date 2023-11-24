@@ -29,7 +29,7 @@ public class ArticleController {
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key") }, summary = "Get article by keyword",
             description = "Get article by keyword")
-    @PostMapping("/search-article")
+    @PostMapping("/learning-management-system/v1/article-list/{article-title}")
     public ResponseEntity<GeneralDataPaginationResponse<ArticleResponse>> searchArticle(
             @Valid @RequestBody SearchArticleRequest request) {
 

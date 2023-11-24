@@ -14,6 +14,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             "INNER JOIN Article ta ON ta.id = tas.article_id\n" +
             "INNER JOIN Section ts ON tas.section_id = ts.id\n" +
             "WHERE (ta.articleTitle LIKE CONCAT('%', :articleTitle, '%') \n" +
+            "OR ts.title LIKE CONCAT('%', :articleTitle, '%') \n" +
             "OR ta.body LIKE CONCAT('%', :articleTitle, '%'))")
     List<ArticleResponse> findByArticleTitle(@Param("articleTitle") String articleTitle);
 
