@@ -11,8 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ArticleResponse {
 
-    private String sectionTitle;
-    private String articleTitle;
-    private String body;
-
+  private String sectionTitle;
+  private String articleTitle;
+  private String body;
 }

@@ -1,9 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.Article;
 import com.example.demo.dto.ArticleResponse;
 import com.example.demo.dto.GeneralDataPaginationResponse;
-import com.example.demo.repository.ArticleRepository;
+import com.example.demo.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,38 +11,27 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/article")
+@RequestMapping("/v1")
 public class ArticleController {
 
-    private final ArticleRepository articleRepository;
+    private final ArticleService articleService;
 
     @Autowired
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
     @Operation(security = {@SecurityRequirement(name = "bearer-key")}, summary = "Get articles by section title", description = "Get articles by section title")
-    @GetMapping("/articles-by-section")
+    @GetMapping("/article-list")
     public ResponseEntity<GeneralDataPaginationResponse<ArticleResponse>> getArticlesBySection(
             @RequestParam String sectionTitle) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String createdBy = (authentication == null) ? null : authentication.getName();
 
-        List<Article> articles = articleRepository.findBySectionTitle(sectionTitle);
-
-        List<ArticleResponse> articleResponseDataList = articles.stream()
-                .map(article -> new ArticleResponse(sectionTitle, article.getArticleTitle(), article.getBody()))
-                .collect(Collectors.toList());
-
-        GeneralDataPaginationResponse<ArticleResponse> response = GeneralDataPaginationResponse.<ArticleResponse>builder()
-                .pagination(new GeneralDataPaginationResponse.Pagination(2, 2))
-                .data(articleResponseDataList)
-                .build();
+        GeneralDataPaginationResponse<ArticleResponse> response = articleService.getArticlesBySection(sectionTitle);
 
         return ResponseEntity.ok(response);
     }

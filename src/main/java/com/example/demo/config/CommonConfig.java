@@ -14,32 +14,33 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class CommonConfig {
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
-    @Bean
-    ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
+  @Bean
+  PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    CommandLineRunner run(UserService userService, RoleService roleService) {
-        return args -> {
-            if (roleService.findAll().isEmpty()) {
-                roleService.create(new RoleDto(AppConstants.ROLE_USER));
-                roleService.create(new RoleDto(AppConstants.ROLE_MANAGER));
-                roleService.create(new RoleDto(AppConstants.ROLE_ADMIN));
-                roleService.create(new RoleDto(AppConstants.ROLE_SUPER_ADMIN));
-            }
-            if (userService.findAll().isEmpty()) {
-                userService.create(new UserDto("Ayub Yoga", "ayubyoga@gmail.com", "ayubyoga", "231231"));
+  @Bean
+  ModelMapper modelMapper() {
+    return new ModelMapper();
+  }
 
-                userService.addRoleByUsername("ayubyoga", AppConstants.ROLE_USER);
-                userService.addRoleByUsername("ayubyoga", AppConstants.ROLE_MANAGER);
-                userService.addRoleByUsername("ayubyoga", AppConstants.ROLE_SUPER_ADMIN);
-            }
-        };
-    }
+  @Bean
+  CommandLineRunner run(UserService userService, RoleService roleService) {
+    return args -> {
+      if (roleService.findAll().isEmpty()) {
+        roleService.create(new RoleDto(AppConstants.ROLE_USER));
+        roleService.create(new RoleDto(AppConstants.ROLE_MANAGER));
+        roleService.create(new RoleDto(AppConstants.ROLE_ADMIN));
+        roleService.create(new RoleDto(AppConstants.ROLE_SUPER_ADMIN));
+      }
+      if (userService.findAll().isEmpty()) {
+        userService.create(new UserDto("Ayub Yoga", "ayubyoga@gmail.com", "ayubyoga", "231231"));
+
+        userService.addRoleByUsername("ayubyoga", AppConstants.ROLE_USER);
+        userService.addRoleByUsername("ayubyoga", AppConstants.ROLE_MANAGER);
+        userService.addRoleByUsername("ayubyoga", AppConstants.ROLE_SUPER_ADMIN);
+      }
+    };
+  }
 }

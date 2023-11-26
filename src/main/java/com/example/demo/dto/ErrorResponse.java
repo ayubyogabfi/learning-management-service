@@ -1,28 +1,27 @@
 package com.example.demo.dto;
 
+import java.time.Instant;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.Instant;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ErrorResponse {
 
-    private Instant timestamp;
+  private Instant timestamp;
 
-    private int status;
+  private int status;
 
-    private String reason;
+  private String reason;
 
-    private List<String> errors;
+  private List<String> errors;
 
-    private String type;
+  private String type;
 
-    private String path;
+  private String path;
 
-    private String message;
+  private String message;
 }
