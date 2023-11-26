@@ -11,24 +11,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping(value = "/v1/article")
 public class ArticleController {
 
-  private final ArticleService articleService;
-
   @Autowired
-  public ArticleController(ArticleService articleService) {
-    this.articleService = articleService;
-  }
+  private ArticleService articleService;
 
   @Operation(
     security = { @SecurityRequirement(name = "bearer-key") },
     summary = "Get article list (by user logged in)",
     description = "Get article list (by user logged in)"
   )
-  @PostMapping("/v1/article-list/{article-title}")
+  @PostMapping(value = "/{article-title}")
   public ResponseEntity<GeneralDataPaginationResponse<ArticleResponse>> searchArticle(
     @Valid @RequestBody SearchArticleRequest request
   ) {
