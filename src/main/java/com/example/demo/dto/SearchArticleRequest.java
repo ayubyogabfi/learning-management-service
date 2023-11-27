@@ -1,6 +1,8 @@
 package com.example.demo.dto;
 
 import javax.validation.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Getter
@@ -11,5 +13,6 @@ import lombok.*;
 public class SearchArticleRequest {
 
   @NotEmpty(message = "Article title must not be empty")
+  @JsonProperty(value = "article_title")
   private String articleTitle;
 }

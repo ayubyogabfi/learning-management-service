@@ -12,11 +12,15 @@ public class ArticleSection extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
   public Long id;
 
-  public String section_id;
+  @Column(name = "section_id")
+  public String sectionId;
 
-  public String article_id;
+  @Column(name = "article_id")
+  public String articleId;
 
+  @Column(name = "body")
   public String body;
 }

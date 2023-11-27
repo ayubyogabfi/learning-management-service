@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.example.demo.constants.APIConstants;
+import com.example.demo.constants.AppConstants;
 import com.example.demo.dto.UserDto;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
@@ -26,9 +27,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @Slf4j
 public class UserController {
 
-  private static final String USER_CREATED_LOG = "User was created:{}";
-  private static final String USER_UPDATED_LOG = "User was updated:{}";
-
   private final UserService userService;
 
   @Operation(
@@ -37,14 +35,14 @@ public class UserController {
     description = "Get all users description"
   )
   @ApiResponse(responseCode = "200", description = "Users successfully obtained")
-  @GetMapping
+  @GetMapping(value = "/find-user")
   public ResponseEntity<Collection<User>> findAll() {
     return ResponseEntity.ok().body(userService.findAll());
   }
 
   @Operation(summary = "Create a user", description = "Create a user description")
   @ApiResponse(responseCode = "201", description = "User successfully created")
-  @PostMapping(consumes = APPLICATION_JSON_VALUE)
+  @PostMapping(consumes = APPLICATION_JSON_VALUE, value = "/create-user")
   public ResponseEntity<User> create(@Valid @RequestBody UserDto user) {
     final User userCreated = userService.create(user);
     final URI uri = URI.create(
@@ -53,7 +51,7 @@ public class UserController {
         .path(APIConstants.USERS_PATH + "/" + userCreated.getUserId())
         .toUriString()
     );
-    log.info(USER_CREATED_LOG, userCreated);
+    log.info(AppConstants.USER_CREATED_LOG, userCreated);
     return ResponseEntity.created(uri).body(userCreated);
   }
 }

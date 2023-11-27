@@ -26,17 +26,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  private static final String ROOT_ENTRY_POINT = "/";
-  private static final String SWAGGER_UI_ENTRY_POINT = APIConstants.SWAGGER_UI_PATH + "/**";
-  private static final String SWAGGER_HTML_ENTRY_POINT = APIConstants.SWAGGER_UI_PATH + ".html/**";
-  private static final String SWAGGER_RESOURCES_ENTRY_POINT = APIConstants.SWAGGER_RESOURCES_PATH + "/**";
-  private static final String API_DOCS_ENTRY_POINT = APIConstants.API_DOCS_PATH + "/**";
-  private static final String LOGIN_ENTRY_POINT = APIConstants.LOGIN_PATH + "/**";
-  private static final String REFRESH_TOKEN_ENTRY_POINT = APIConstants.REFRESH_TOKEN_PATH + "/**";
-  private static final String USERS_ENTRY_POINT = APIConstants.USERS_PATH + "/**";
-  private static final String ERROR_ENTRY_POINT = "/error";
-  private static final String SECTION_ENTRY_POINT = APIConstants.SECTION_PATH + "/**";
-
   private final UserDetailsService userDetailsService;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final UserService userService;
@@ -68,20 +57,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .and()
       .authorizeRequests()
       .antMatchers(
-        ROOT_ENTRY_POINT,
-        API_DOCS_ENTRY_POINT,
-        SWAGGER_UI_ENTRY_POINT,
-        SWAGGER_HTML_ENTRY_POINT,
-        SWAGGER_RESOURCES_ENTRY_POINT,
-        LOGIN_ENTRY_POINT,
-        REFRESH_TOKEN_ENTRY_POINT,
-        ERROR_ENTRY_POINT,
-        SECTION_ENTRY_POINT
+        APIConstants.ROOT_ENTRY_POINT,
+        APIConstants.API_DOCS_ENTRY_POINT,
+        APIConstants.SWAGGER_UI_ENTRY_POINT,
+        APIConstants.SWAGGER_HTML_ENTRY_POINT,
+        APIConstants.SWAGGER_RESOURCES_ENTRY_POINT,
+        APIConstants.LOGIN_ENTRY_POINT,
+        APIConstants.REFRESH_TOKEN_ENTRY_POINT,
+        APIConstants.ERROR_ENTRY_POINT,
+        APIConstants.SECTION_ENTRY_POINT
       )
       .permitAll()
-      .antMatchers(POST, USERS_ENTRY_POINT)
+      .antMatchers(POST, APIConstants.USERS_ENTRY_POINT)
       .permitAll() // permit register
-      .antMatchers(GET, USERS_ENTRY_POINT)
+      .antMatchers(GET, APIConstants.USERS_ENTRY_POINT)
       .hasAnyAuthority(AppConstants.ROLE_USER)
       .anyRequest()
       .authenticated();

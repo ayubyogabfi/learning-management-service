@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping
+@RequestMapping("/v1/article-list")
 public class SectionController {
 
   private final SectionService sectionService;
@@ -32,7 +32,7 @@ public class SectionController {
     summary = "Get all section",
     description = "Get all section list"
   )
-  @GetMapping("/v1/article-list")
+  @GetMapping
   public ResponseEntity<GeneralDataPaginationResponse<SectionResponseData>> getAllSections() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String createdBy = (authentication == null) ? null : authentication.getName();

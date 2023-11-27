@@ -38,17 +38,16 @@ public class JwtUtil {
       )
       .withSubject(userDetails.getUsername())
       .withExpiresAt(date)
-      .sign(TokenConstants.getAlgorithm());
+      .sign(getAlgorithm());
   }
 
   public static String createToken(User user, Date date) {
     return JWT
       .create()
       .withIssuer(TokenConstants.ISSUER)
-      .withClaim(TokenConstants.ROLES_CLAIM_KEY, user.getRolesName())
       .withSubject(user.getUsername())
       .withExpiresAt(date)
-      .sign(TokenConstants.getAlgorithm());
+      .sign(getAlgorithm());
   }
 
   public static String createRefreshToken(UserDetails userDetails) {
@@ -57,7 +56,7 @@ public class JwtUtil {
 
   public static Boolean verify(String token) {
     try {
-      JWTVerifier verifier = JWT.require(TokenConstants.getAlgorithm()).build();
+      JWTVerifier verifier = JWT.require(getAlgorithm()).build();
       verifier.verify(token);
       return Boolean.TRUE;
     } catch (JWTVerificationException verifyEx) {
@@ -77,5 +76,13 @@ public class JwtUtil {
 
   public static Claim getClaim(String token, String key) {
     return decodeToken(token).getClaim(key);
+  }
+
+  public static Algorithm getAlgorithm() {
+    try {
+      return Algorithm.HMAC256(TokenConstants.TOKEN_KEY.getBytes());
+    } catch (IllegalArgumentException e) {
+      return Algorithm.none();
+    }
   }
 }

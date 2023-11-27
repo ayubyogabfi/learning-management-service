@@ -2,20 +2,14 @@ package com.example.demo.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.example.demo.dto.UserDto;
-import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.exceptions.ConflictException;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.repository.UserRepository;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -39,9 +33,6 @@ class UserServiceTest {
 
   @MockBean
   private PasswordEncoder passwordEncoder;
-
-  @MockBean
-  private RoleService roleService;
 
   @MockBean
   private UserRepository userRepository;
@@ -87,7 +78,7 @@ class UserServiceTest {
 
     Optional<User> ofResult = Optional.of(user);
     when(userRepository.findByUsername(Mockito.<String>any())).thenReturn(ofResult);
-    UserDetails actualLoadUserByUsernameResult = userService.loadUserByUsername("janedoe");
+    UserDetails actualLoadUserByUsernameResult = userService.loadUserByUsername("ayubyoga");
     assertTrue(actualLoadUserByUsernameResult.getAuthorities().isEmpty());
     assertTrue(actualLoadUserByUsernameResult.isEnabled());
     assertTrue(actualLoadUserByUsernameResult.isCredentialsNonExpired());

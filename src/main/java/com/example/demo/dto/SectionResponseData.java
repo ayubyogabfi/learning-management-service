@@ -1,15 +1,19 @@
 package com.example.demo.dto;
 
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SectionResponseData {
 
-  private final String sectionTitle;
-  private final String body;
+  @JsonProperty(value = "section_title")
+  public String sectionTitle;
 
-  public SectionResponseData(String sectionTitle, String body) {
-    this.sectionTitle = sectionTitle;
-    this.body = body;
-  }
+  @JsonProperty(value = "body")
+  public String body;
+
 }

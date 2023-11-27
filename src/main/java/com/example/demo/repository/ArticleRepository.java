@@ -10,8 +10,8 @@ import org.springframework.data.repository.query.Param;
 public interface ArticleRepository extends JpaRepository<Article, Long> {
   @Query(
     "SELECT tas FROM ArticleSection tas\n" +
-    "INNER JOIN Article ta ON ta.id = tas.article_id\n" +
-    "INNER JOIN Section ts ON tas.section_id = ts.id\n" +
+    "INNER JOIN Article ta ON ta.id = tas.articleId\n" +
+    "INNER JOIN Section ts ON tas.sectionId = ts.id\n" +
     "WHERE (ta.articleTitle LIKE CONCAT('%', :articleTitle, '%') \n" +
     "OR ts.title LIKE CONCAT('%', :articleTitle, '%') \n" +
     "OR ta.body LIKE CONCAT('%', :articleTitle, '%'))"
