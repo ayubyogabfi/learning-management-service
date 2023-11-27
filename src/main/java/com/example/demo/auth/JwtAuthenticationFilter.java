@@ -85,4 +85,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   private boolean isFormUrlEncoded(HttpServletRequest request) {
     return MediaType.APPLICATION_FORM_URLENCODED_VALUE.equalsIgnoreCase(request.getContentType());
   }
+
+
 }
