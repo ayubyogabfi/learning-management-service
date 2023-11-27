@@ -15,5 +15,4 @@ public class SectionResponseData {
 
   @JsonProperty(value = "body")
   public String body;
-
 }

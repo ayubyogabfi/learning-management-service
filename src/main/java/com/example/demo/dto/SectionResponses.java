@@ -1,7 +1,6 @@
 package com.example.demo.dto;
 
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,5 +12,4 @@ import lombok.NoArgsConstructor;
 public class SectionResponses<T> {
 
   public List<T> data;
-
 }

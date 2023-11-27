@@ -1,9 +1,7 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.*;
-import java.util.stream.Collectors;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;

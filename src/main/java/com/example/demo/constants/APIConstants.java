@@ -2,7 +2,7 @@ package com.example.demo.constants;
 
 public class APIConstants {
 
-  public static final String LOGIN_PATH = "/login";
+  public static final String LOGIN_PATH = "/v1/login";
   public static final String REFRESH_TOKEN_PATH = "/refresh-token";
   public static final String USERS_PATH = "/v1/users";
   public static final String SWAGGER_UI_PATH = "/swagger-ui";
@@ -21,5 +21,4 @@ public class APIConstants {
   public static final String USERS_ENTRY_POINT = APIConstants.USERS_PATH + "/**";
   public static final String ERROR_ENTRY_POINT = "/error";
   public static final String SECTION_ENTRY_POINT = APIConstants.SECTION_PATH + "/**";
-
 }

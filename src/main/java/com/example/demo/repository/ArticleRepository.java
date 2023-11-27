@@ -16,5 +16,5 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     "OR ts.title LIKE CONCAT('%', :articleTitle, '%') \n" +
     "OR ta.body LIKE CONCAT('%', :articleTitle, '%'))"
   )
-  List<ArticleResponse> findByArticleTitle(@Param("articleTitle") String articleTitle);
+  List<ArticleResponse> findArticleByArticleTitle(@Param("articleTitle") String articleTitle);
 }

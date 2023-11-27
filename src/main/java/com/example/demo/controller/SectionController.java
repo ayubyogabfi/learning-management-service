@@ -17,15 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1/article-list")
+@RequestMapping("/v1/section")
 public class SectionController {
 
-  private final SectionService sectionService;
-
   @Autowired
-  public SectionController(SectionService sectionService) {
-    this.sectionService = sectionService;
-  }
+  private SectionService sectionService;
 
   @Operation(
     security = { @SecurityRequirement(name = "bearer-key") },
@@ -34,8 +30,7 @@ public class SectionController {
   )
   @GetMapping
   public ResponseEntity<GeneralDataPaginationResponse<SectionResponseData>> getAllSections() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String createdBy = (authentication == null) ? null : authentication.getName();
+    SecurityContextHolder.getContext().getAuthentication();
 
     List<Section> sections = sectionService.getAllSections();
 

@@ -1,8 +1,7 @@
 package com.example.demo.dto;
 
-import javax.validation.constraints.NotEmpty;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotEmpty;
 import lombok.*;
 
 @Getter

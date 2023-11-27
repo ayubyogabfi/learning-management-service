@@ -11,5 +11,4 @@ public class TokenConstants {
   public static final long EXPIRES_LIMIT = 3L;
 
   public static final String ROLES_CLAIM_KEY = "admin";
-
 }

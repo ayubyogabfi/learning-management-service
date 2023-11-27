@@ -2,6 +2,7 @@ package com.example.demo.auth;
 
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
+import com.example.demo.service.impl.UserDetailsImpl;
 import com.example.demo.util.JwtUtil;
 import com.example.demo.util.ResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -85,6 +86,4 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   private boolean isFormUrlEncoded(HttpServletRequest request) {
     return MediaType.APPLICATION_FORM_URLENCODED_VALUE.equalsIgnoreCase(request.getContentType());
   }
-
-
 }

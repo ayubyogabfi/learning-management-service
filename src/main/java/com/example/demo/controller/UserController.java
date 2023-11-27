@@ -15,34 +15,25 @@ import java.util.Collection;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-@RequestMapping(path = APIConstants.USERS_PATH, produces = APPLICATION_JSON_VALUE)
+@RequestMapping(produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
 @Slf4j
 public class UserController {
 
-  private final UserService userService;
-
-  @Operation(
-    security = { @SecurityRequirement(name = "bearer-key") },
-    summary = "Get all users",
-    description = "Get all users description"
-  )
-  @ApiResponse(responseCode = "200", description = "Users successfully obtained")
-  @GetMapping(value = "/find-user")
-  public ResponseEntity<Collection<User>> findAll() {
-    return ResponseEntity.ok().body(userService.findAll());
-  }
+  @Autowired
+  private UserService userService;
 
   @Operation(summary = "Create a user", description = "Create a user description")
   @ApiResponse(responseCode = "201", description = "User successfully created")
-  @PostMapping(consumes = APPLICATION_JSON_VALUE, value = "/create-user")
+  @PostMapping(consumes = APPLICATION_JSON_VALUE, value = "/register-account")
   public ResponseEntity<User> create(@Valid @RequestBody UserDto user) {
     final User userCreated = userService.create(user);
     final URI uri = URI.create(

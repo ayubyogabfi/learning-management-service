@@ -1,22 +1,21 @@
 package com.example.demo.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotBlank;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequest {
 
-    @JsonProperty(required = true)
-    @NotBlank
-    private String username;
+  @JsonProperty(required = true, value = "username")
+  @NotBlank
+  private String username;
 
-    @JsonProperty(required = true)
-    @NotBlank
-    private String password;
+  @JsonProperty(required = true, value = "password")
+  @NotBlank
+  private String password;
 }
