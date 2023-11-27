@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/article")
 public class ArticleController {
 
     private final ArticleService articleService;
