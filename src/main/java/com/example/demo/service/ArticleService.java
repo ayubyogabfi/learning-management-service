@@ -6,4 +6,6 @@ import com.example.demo.dto.SearchArticleRequest;
 
 public interface ArticleService {
   GeneralDataPaginationResponse<ArticleResponse> searchArticle(SearchArticleRequest request);
+
+  GeneralDataPaginationResponse<ArticleResponse> findAll();
 }

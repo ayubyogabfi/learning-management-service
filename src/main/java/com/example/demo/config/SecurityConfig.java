@@ -53,7 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         APIConstants.REFRESH_TOKEN_ENTRY_POINT,
         APIConstants.ERROR_ENTRY_POINT,
         APIConstants.SECTION_ENTRY_POINT,
-        APIConstants.REGISTER_ACCOUNT_PATH
+        APIConstants.REGISTER_ACCOUNT_PATH,
+        "/v1/article"
       )
       .permitAll()
       .antMatchers(HttpMethod.POST, APIConstants.USERS_ENTRY_POINT)

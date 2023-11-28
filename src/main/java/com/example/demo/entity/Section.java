@@ -14,12 +14,12 @@ import lombok.*;
 public class Section extends BaseEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  //  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false)
+  @Column
   private String title;
 
-  @Column(columnDefinition = "TEXT")
+  @Column
   private String body;
 }

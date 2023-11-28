@@ -37,4 +37,15 @@ public class ArticleServiceImpl implements ArticleService {
       .data(articles)
       .build();
   }
+
+  @Override
+  public GeneralDataPaginationResponse<ArticleResponse> findAll() {
+    List<ArticleResponse> articles = articleRepository.findAllArticles();
+
+    return GeneralDataPaginationResponse
+      .<ArticleResponse>builder()
+      .pagination(new GeneralDataPaginationResponse.Pagination(2, 2))
+      .data(articles)
+      .build();
+  }
 }
