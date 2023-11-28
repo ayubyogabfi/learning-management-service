@@ -1,7 +1,7 @@
 package com.example.demo.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,16 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
-
-  @JsonProperty(required = true, value = "name")
-  @NotBlank
-  private String name;
-
-  @JsonProperty(required = true, value = "email")
-  @NotBlank
-  @Email
-  private String email;
+public class LoginRequest {
 
   @JsonProperty(required = true, value = "username")
   @NotBlank

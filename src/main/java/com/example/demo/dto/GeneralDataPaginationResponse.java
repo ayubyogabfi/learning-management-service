@@ -7,40 +7,78 @@ import org.springframework.data.domain.Pageable;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class GeneralDataPaginationResponse<T> {
 
-    public GeneralDataPaginationResponse(List<T> listOfData, Pageable pageable, long total, int nextPage) {
-        var totalPages = pageable.getPageSize() == 0
-                ? 1
-                : (int) Math.ceil((double) total / (double) pageable.getPageSize());
+  public GeneralDataPaginationResponse(
+    List<T> listOfData,
+    Pageable pageable,
+    long total,
+    int nextPage,
+    Filter filter,
+    Sort sort
+  ) {
+    var totalPages = pageable.getPageSize() == 0
+      ? 1
+      : (int) Math.ceil((double) total / (double) pageable.getPageSize());
 
-        var pagination = new Pagination();
-        pagination.setNextPage(nextPage);
-        pagination.setTotalPage(totalPages);
-        this.setPagination(pagination);
+    var pagination = new Pagination();
+    pagination.setNextPage(nextPage);
+    pagination.setTotalPage(totalPages);
+    this.setPagination(pagination);
 
-        this.setData(listOfData);
-    }
+    this.setFilter(filter);
+    this.setSort(sort);
+    this.setData(listOfData);
+  }
 
-    @JsonProperty(namespace = "pagination")
-    private Pagination pagination;
+  @JsonProperty(namespace = "pagination")
+  private Pagination pagination;
 
-    @JsonProperty(namespace = "data")
-    private List<T> data;
+  @JsonProperty(namespace = "filter")
+  private Filter filter;
 
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Setter
-    @Getter
-    public static class Pagination {
+  @JsonProperty(namespace = "sort")
+  private Sort sort;
 
-        @JsonProperty("total_page")
-        private int totalPage;
+  @JsonProperty(namespace = "data")
+  private List<T> data;
 
-        @JsonProperty("next_page")
-        private int nextPage;
-    }
+  @Builder
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Setter
+  @Getter
+  public static class Pagination {
+
+    @JsonProperty("total_page")
+    private int totalPage;
+
+    @JsonProperty("next_page")
+    private int nextPage;
+  }
+
+  @Builder
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Setter
+  @Getter
+  public static class Filter {
+
+    @JsonProperty("section_title")
+    private String sectionTitle;
+  }
+
+  @Builder
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Setter
+  @Getter
+  public static class Sort {
+
+    @JsonProperty("order")
+    private String order = "asc";
+  }
 }

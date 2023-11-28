@@ -8,18 +8,22 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tm_section")
-public class Section extends BaseEntity {
+@NoArgsConstructor
+@Table(name = "tx_article")
+public class Article extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
   private Long id;
 
-  @Column(nullable = false)
-  private String title;
+  @Column(name = "section_title")
+  private String sectionTitle;
 
-  @Column(columnDefinition = "TEXT")
+  @Column(name = "article_title")
+  private String articleTitle;
+
+  @Column(name = "body")
   private String body;
 }
