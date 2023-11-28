@@ -1,14 +1,15 @@
 package com.example.demo.dto;
 
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SectionResponses<T> {
 
-  private final List<T> data;
-
-  public SectionResponses(List<T> data) {
-    this.data = data;
-  }
+  public List<T> data;
 }

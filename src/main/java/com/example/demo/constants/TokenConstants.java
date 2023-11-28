@@ -10,13 +10,5 @@ public class TokenConstants {
 
   public static final long EXPIRES_LIMIT = 3L;
 
-  public static final String ROLES_CLAIM_KEY = "roles";
-
-  public static Algorithm getAlgorithm() {
-    try {
-      return Algorithm.HMAC256(TokenConstants.TOKEN_KEY.getBytes());
-    } catch (IllegalArgumentException e) {
-      return Algorithm.none();
-    }
-  }
+  public static final String ROLES_CLAIM_KEY = "admin";
 }

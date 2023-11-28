@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenAPIConfig {
 
+  //this config is used to help user use the Swagger display and features,
+  //but if deprecated, will be deleted later
   @Bean
   public OpenAPI customOpenAPI(
     @Value("${application-description}") String appDescription,
@@ -27,7 +29,7 @@ public class OpenAPIConfig {
       )
       .info(
         new Info()
-          .title("Scratch API")
+          .title("Learning Management Service")
           .version(appVersion)
           .description(appDescription)
           .termsOfService("https://swagger.io/terms/")

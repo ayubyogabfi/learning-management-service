@@ -1,8 +1,7 @@
-// SectionController.java
 package com.example.demo.controller;
 
+import com.example.demo.dto.GeneralDataPaginationResponse;
 import com.example.demo.dto.SectionResponseData;
-import com.example.demo.dto.SectionResponses;
 import com.example.demo.entity.Section;
 import com.example.demo.service.SectionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,15 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/section")
+@RequestMapping("/v1/section")
 public class SectionController {
 
-  private final SectionService sectionService;
-
   @Autowired
-  public SectionController(SectionService sectionService) {
-    this.sectionService = sectionService;
-  }
+  private SectionService sectionService;
 
   @Operation(
     security = { @SecurityRequirement(name = "bearer-key") },
@@ -34,17 +29,22 @@ public class SectionController {
     description = "Get all section list"
   )
   @GetMapping
-  public ResponseEntity<?> getAllSections() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String createdBy = (authentication == null) ? null : authentication.getName();
+  public ResponseEntity<GeneralDataPaginationResponse<SectionResponseData>> getAllSections() {
+    SecurityContextHolder.getContext().getAuthentication();
 
     List<Section> sections = sectionService.getAllSections();
 
-    List<SectionResponseData> sectionResponsData = sections
+    List<SectionResponseData> sectionResponseDataList = sections
       .stream()
       .map(section -> new SectionResponseData(section.getTitle(), section.getBody()))
       .collect(Collectors.toList());
 
-    return ResponseEntity.ok(new SectionResponses<>(sectionResponsData));
+    GeneralDataPaginationResponse<SectionResponseData> response = GeneralDataPaginationResponse
+      .<SectionResponseData>builder()
+      .pagination(new GeneralDataPaginationResponse.Pagination(2, 2))
+      .data(sectionResponseDataList)
+      .build();
+
+    return ResponseEntity.ok(response);
   }
 }

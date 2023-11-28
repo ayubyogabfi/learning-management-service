@@ -9,9 +9,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoleDto {
+public class LoginRequest {
 
-  @JsonProperty(required = true)
+  @JsonProperty(required = true, value = "username")
   @NotBlank
-  private String name;
+  private String username;
+
+  @JsonProperty(required = true, value = "password")
+  @NotBlank
+  private String password;
 }

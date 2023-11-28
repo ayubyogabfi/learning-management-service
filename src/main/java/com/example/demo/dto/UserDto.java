@@ -11,20 +11,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserDto {
 
-  @JsonProperty(required = true)
+  @JsonProperty(required = true, value = "name")
   @NotBlank
   private String name;
 
-  @JsonProperty(required = true)
+  @JsonProperty(required = true, value = "email")
   @NotBlank
   @Email
   private String email;
 
-  @JsonProperty(required = true)
+  @JsonProperty(required = true, value = "username")
   @NotBlank
   private String username;
 
-  @JsonProperty(required = true)
+  @JsonProperty(required = true, value = "password")
   @NotBlank
   private String password;
 }

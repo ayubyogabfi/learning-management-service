@@ -1,9 +1,7 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.*;
-import java.util.stream.Collectors;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -21,27 +19,21 @@ public class User extends BaseEntity {
   @Column(name = "user_id")
   private Integer userId;
 
-  @Column
+  @Column(name = "name")
   private String name;
 
-  @Column(unique = true)
+  @Column(unique = true, name = "email")
   private String email;
 
-  @Column(unique = true)
+  @Column(unique = true, name = "username")
   private String username;
 
-  @Column(nullable = false)
+  @Column(nullable = false, name = "password")
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
 
-  @ManyToMany(fetch = FetchType.EAGER)
-  private final Collection<Role> roles = new ArrayList<>();
-
-  @JsonIgnore
-  public List<String> getRolesName() {
-    if (this.getRoles().isEmpty()) return Collections.emptyList();
-    return this.getRoles().stream().map(Role::getName).collect(Collectors.toList());
-  }
+  @Column(name = "roles")
+  private String roles;
 
   @Override
   public boolean equals(Object o) {

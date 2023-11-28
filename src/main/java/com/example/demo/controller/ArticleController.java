@@ -2,37 +2,36 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.ArticleResponse;
 import com.example.demo.dto.GeneralDataPaginationResponse;
+import com.example.demo.dto.SearchArticleRequest;
 import com.example.demo.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1/article")
+@RequestMapping(value = "/v1/article")
 public class ArticleController {
 
-    private final ArticleService articleService;
+  @Autowired
+  private ArticleService articleService;
 
-    @Autowired
-    public ArticleController(ArticleService articleService) {
-        this.articleService = articleService;
-    }
+  @Operation(
+    security = { @SecurityRequirement(name = "bearer-key") },
+    summary = "Get article list (by user logged in)",
+    description = "Get article list (by user logged in)"
+  )
+  @PostMapping(value = "/{article-title}")
+  public ResponseEntity<GeneralDataPaginationResponse<ArticleResponse>> searchArticle(
+    @Valid @RequestBody SearchArticleRequest request
+  ) {
+    GeneralDataPaginationResponse<ArticleResponse> response = articleService.searchArticle(request);
 
-    @Operation(security = {@SecurityRequirement(name = "bearer-key")}, summary = "Get articles by section title", description = "Get articles by section title")
-    @GetMapping("/article-list")
-    public ResponseEntity<GeneralDataPaginationResponse<ArticleResponse>> getArticlesBySection(
-            @RequestParam String sectionTitle) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String createdBy = (authentication == null) ? null : authentication.getName();
-
-        GeneralDataPaginationResponse<ArticleResponse> response = articleService.getArticlesBySection(sectionTitle);
-
-        return ResponseEntity.ok(response);
-    }
+    return ResponseEntity.ok(response);
+  }
 }
