@@ -10,6 +10,7 @@ public class APIConstants {
   public static final String API_DOCS_PATH = "/v3/api-docs";
   public static final String SECTION_PATH = "/v1/section";
   public static final String AUTH_PATH = "/v1/authenticate";
+  public static final String REGISTER_ACCOUNT_PATH = "/v1/register-account";
 
   public static final String ROOT_ENTRY_POINT = "/";
   public static final String SWAGGER_UI_ENTRY_POINT = APIConstants.SWAGGER_UI_PATH + "/**";
@@ -21,4 +22,5 @@ public class APIConstants {
   public static final String USERS_ENTRY_POINT = APIConstants.USERS_PATH + "/**";
   public static final String ERROR_ENTRY_POINT = "/error";
   public static final String SECTION_ENTRY_POINT = APIConstants.SECTION_PATH + "/**";
+  public static final String REGISTER_ACCOUNT_ENTRY_POINT = APIConstants.REGISTER_ACCOUNT_PATH + "/**";
 }

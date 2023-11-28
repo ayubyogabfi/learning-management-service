@@ -1,5 +1,6 @@
 package com.example.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,4 +16,7 @@ public class LoginResponse {
 
   @JsonProperty(value = "access_token")
   private String accessToken;
+
+  @JsonIgnore
+  private String password;
 }

@@ -12,7 +12,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenAPIConfig {
 
-  //i use this
+  //this config is used to help user use the Swagger display and features,
+  //but if deprecated, will be deleted later
   @Bean
   public OpenAPI customOpenAPI(
     @Value("${application-description}") String appDescription,

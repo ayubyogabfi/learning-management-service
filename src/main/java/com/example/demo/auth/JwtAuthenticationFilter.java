@@ -1,8 +1,8 @@
 package com.example.demo.auth;
 
 import com.example.demo.entity.User;
+import com.example.demo.entity.UserDetails;
 import com.example.demo.service.UserService;
-import com.example.demo.service.impl.UserDetailsImpl;
 import com.example.demo.util.JwtUtil;
 import com.example.demo.util.ResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,14 +59,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     FilterChain chain,
     Authentication authentication
   ) throws IOException {
-    UserDetailsImpl user = (UserDetailsImpl) authentication.getPrincipal();
+    UserDetails user = (UserDetails) authentication.getPrincipal();
     final String accessToken = JwtUtil.createToken(user);
     final String refreshToken = JwtUtil.createRefreshToken(user);
     ResponseUtil.responseTokensWithUserInfo(
       response,
       accessToken,
       refreshToken,
-      userService.findByUsername(user.getUsername())
+      userService.findUserAccountByUsername(user.getUsername())
     );
   }
 

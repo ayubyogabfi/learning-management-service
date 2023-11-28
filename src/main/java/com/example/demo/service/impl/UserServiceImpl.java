@@ -4,6 +4,7 @@ import com.example.demo.constants.AppConstants;
 import com.example.demo.dto.LoginResponse;
 import com.example.demo.dto.UserDto;
 import com.example.demo.entity.User;
+import com.example.demo.entity.UserDetails;
 import com.example.demo.exceptions.ConflictException;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.repository.UserRepository;
@@ -13,7 +14,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,10 +36,10 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User findByUsername(String username) {
+  public User findUserAccountByUsername(String username) {
     log.info(AppConstants.FIND_LOG, username);
     return userRepository
-      .findByUsername(username)
+      .findUserAccountByUsername(username)
       .orElseThrow(() -> new NotFoundException(String.format(AppConstants.NOT_FOUND_BY_USERNAME, username)));
   }
 
@@ -60,36 +60,36 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User validateUserCredentials(String username, String password) {
-    User user = findByUsername(username);
+  public LoginResponse validateUserCredentials(String username, String password) {
+    LoginResponse user = userRepository
+      .findPasswordByUsername(username)
+      .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
 
-    if (user == null || !equals(password, user.getPassword())) {
+    var decryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+    if (!bCryptPasswordEncoder.matches(password, decryptedPassword)) {
       throw new BadCredentialsException("Invalid username or password");
     }
+
     return user;
   }
 
-  private boolean equals(String password, String password1) {
-    return false;
-  }
-
   private void checkUsername(String username) {
-    Optional<User> user = userRepository.findByUsername(username);
+    Optional<User> user = userRepository.findUserAccountByUsername(username);
     if (user.isPresent()) {
       throw new ConflictException("The username already exists.");
     }
   }
 
   private void checkEmail(String email) {
-    Optional<User> user = userRepository.findByEmail(email);
+    Optional<User> user = userRepository.findUserAccountByEmail(email);
     if (user.isPresent()) {
       throw new ConflictException("The email already exists.");
     }
   }
 
   @Override
-  public UserDetails loadUserByUsername(String username) {
-    User user = findByUsername(username);
-    return new UserDetailsImpl(user.getUsername(), user.getPassword(), null);
+  public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String username) {
+    User user = findUserAccountByUsername(username);
+    return new UserDetails(user.getUsername(), user.getPassword(), null);
   }
 }

@@ -1,12 +1,12 @@
-package com.example.demo.service.impl;
+package com.example.demo.entity;
 
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-public class UserDetailsImpl extends User {
+public class UserDetails extends User {
 
-  public UserDetailsImpl(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+  public UserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities) {
     super(username, password, authorities);
   }
 }

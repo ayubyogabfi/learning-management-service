@@ -21,7 +21,7 @@ public class ArticleServiceImpl implements ArticleService {
 
   @Override
   public GeneralDataPaginationResponse<ArticleResponse> searchArticle(SearchArticleRequest request) {
-    if (request.getArticleTitle() == null || request.getArticleTitle().trim().length() < 3) {
+    if (request.getKeyword() == null || request.getKeyword().trim().length() < 3) {
       return GeneralDataPaginationResponse
         .<ArticleResponse>builder()
         .pagination(new GeneralDataPaginationResponse.Pagination(0, 0))
@@ -29,7 +29,7 @@ public class ArticleServiceImpl implements ArticleService {
         .build();
     }
 
-    List<ArticleResponse> articles = articleRepository.findArticleByArticleTitle(request.getArticleTitle());
+    List<ArticleResponse> articles = articleRepository.findArticleByKeyword(request.getKeyword());
 
     return GeneralDataPaginationResponse
       .<ArticleResponse>builder()

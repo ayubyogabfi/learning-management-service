@@ -31,9 +31,9 @@ public class UserController {
   @Autowired
   private UserService userService;
 
-  @Operation(summary = "Create a user", description = "Create a user description")
+  @Operation(summary = "Create a user", description = "Create a user")
   @ApiResponse(responseCode = "201", description = "User successfully created")
-  @PostMapping(consumes = APPLICATION_JSON_VALUE, value = "/register-account")
+  @PostMapping(consumes = APPLICATION_JSON_VALUE, value = APIConstants.REGISTER_ACCOUNT_PATH)
   public ResponseEntity<User> create(@Valid @RequestBody UserDto user) {
     final User userCreated = userService.create(user);
     final URI uri = URI.create(

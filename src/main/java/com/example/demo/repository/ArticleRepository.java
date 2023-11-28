@@ -12,9 +12,9 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     "SELECT tas FROM ArticleSection tas\n" +
     "INNER JOIN Article ta ON ta.id = tas.articleId\n" +
     "INNER JOIN Section ts ON tas.sectionId = ts.id\n" +
-    "WHERE (ta.articleTitle LIKE CONCAT('%', :articleTitle, '%') \n" +
-    "OR ts.title LIKE CONCAT('%', :articleTitle, '%') \n" +
-    "OR ta.body LIKE CONCAT('%', :articleTitle, '%'))"
+    "WHERE (ta.articleTitle LIKE CONCAT('%', :keyword, '%') \n" +
+    "OR ts.title LIKE CONCAT('%', :keyword, '%') \n" +
+    "OR ta.body LIKE CONCAT('%', :keyword, '%'))"
   )
-  List<ArticleResponse> findArticleByArticleTitle(@Param("articleTitle") String articleTitle);
+  List<ArticleResponse> findArticleByKeyword(@Param("keyword") String keyword);
 }

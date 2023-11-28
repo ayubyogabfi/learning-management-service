@@ -11,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 public class SearchArticleRequest {
 
-  @NotEmpty(message = "Article title must not be empty")
-  @JsonProperty(value = "article_title")
-  private String articleTitle;
+  @NotEmpty(message = "Keyword must not be empty")
+  @JsonProperty(value = "keyword")
+  private String keyword;
 }

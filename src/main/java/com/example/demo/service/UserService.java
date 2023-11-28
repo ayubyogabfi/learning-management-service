@@ -9,11 +9,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 public interface UserService {
   Collection<User> findAll();
 
-  User findByUsername(String username);
+  User findUserAccountByUsername(String username);
 
   User create(UserDto user);
 
-  User validateUserCredentials(String username, String password);
+  LoginResponse validateUserCredentials(String username, String password);
 
   UserDetails loadUserByUsername(String username);
 }

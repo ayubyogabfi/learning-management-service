@@ -8,10 +8,8 @@ import com.example.demo.constants.APIConstants;
 import com.example.demo.constants.AppConstants;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -54,7 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         APIConstants.LOGIN_PATH,
         APIConstants.REFRESH_TOKEN_ENTRY_POINT,
         APIConstants.ERROR_ENTRY_POINT,
-        APIConstants.SECTION_ENTRY_POINT
+        APIConstants.SECTION_ENTRY_POINT,
+        APIConstants.REGISTER_ACCOUNT_PATH
       )
       .permitAll()
       .antMatchers(HttpMethod.POST, APIConstants.USERS_ENTRY_POINT)
