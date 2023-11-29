@@ -20,10 +20,10 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpec
   List<ArticleResponse> findArticleByKeyword(@Param("keyword") String keyword);
 
   @Query(
-    value = "SELECT tas FROM td_article_section tas\n" +
-    "INNER JOIN tx_article ta ON ta.id = tas.article_id\n" +
-    "INNER JOIN tm_section ts ON tas.section_id = ts.id\n",
-    nativeQuery = true
+    value = "SELECT tas FROM ArticleSection tas\n" +
+    "INNER JOIN Article ta ON ta.id = tas.articleId\n" +
+    "INNER JOIN Section ts ON tas.sectionId = ts.id\n" +
+            "WHERE ta.createdBy = :username"
   )
   List<ArticleResponse> findAllArticles();
 }

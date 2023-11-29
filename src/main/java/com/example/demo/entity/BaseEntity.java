@@ -1,31 +1,35 @@
 package com.example.demo.entity;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Setter
 @MappedSuperclass
 public class BaseEntity {
 
-  //  @CreationTimestamp
-  @Column
-  private ZonedDateTime createdDate;
+  @CreationTimestamp
+  @Column(name = "created_date", updatable = false, nullable = false)
+  protected Instant createdDate;
 
-  @Column
+  @Column(name = "created_by")
   private String createdBy;
 
-  @Column
+  @Column(name = "created_from")
   private String createdFrom;
 
-  @Column
-  private ZonedDateTime updatedDate;
+  @Column(name = "updated_date")
+  private String updatedDate;
 
-  @Column
+  @Column(name = "updated_by")
   private String updatedBy;
 
-  @Column
+  @Column(name = "updated_from")
   private String updatedFrom;
+
+  @Column(name = "deleted_date")
+  private String deletedDate;
 }

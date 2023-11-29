@@ -11,16 +11,16 @@ import lombok.Setter;
 public class ArticleSection extends BaseEntity {
 
   @Id
-  //  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
   public Long id;
 
-  @Column
+  @Column(name = "section_id")
   public String sectionId;
 
-  @Column
+  @Column(name = "article_id")
   public String articleId;
 
-  @Column
+  @Column(name = "body")
   public String body;
 }

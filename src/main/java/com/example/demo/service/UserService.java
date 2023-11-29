@@ -4,7 +4,6 @@ import com.example.demo.dto.LoginResponse;
 import com.example.demo.dto.UserDto;
 import com.example.demo.entity.User;
 import java.util.Collection;
-import org.springframework.security.core.userdetails.UserDetails;
 
 public interface UserService {
   Collection<User> findAll();
@@ -13,7 +12,7 @@ public interface UserService {
 
   User create(UserDto user);
 
-  LoginResponse validateUserCredentials(String username, String password);
+//  LoginResponse validateUserCredentials(String username, String password);
 
-  UserDetails loadUserByUsername(String username);
+  LoginResponse validatePassword(String username, String password);
 }

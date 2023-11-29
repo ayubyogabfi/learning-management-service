@@ -10,16 +10,16 @@ import lombok.*;
 public class Article extends BaseEntity {
 
   @Id
-  //  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
   private Long id;
 
-  @Column
+  @Column(name = "section_title")
   private String sectionTitle;
 
-  @Column
+  @Column(name = "article_title")
   private String articleTitle;
 
-  @Column
+  @Column(name = "body")
   private String body;
 }

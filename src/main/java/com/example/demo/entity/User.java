@@ -15,24 +15,24 @@ import org.hibernate.Hibernate;
 public class User extends BaseEntity {
 
   @Id
-  //  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "user_id")
   private Integer userId;
 
-  @Column
+  @Column(name = "name")
   private String name;
 
-  @Column
+  @Column(unique = true, name = "email")
   private String email;
 
-  @Column
+  @Column(unique = true, name = "username")
   private String username;
 
-  @Column
-  //  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+  @Column(nullable = false, name = "password")
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
 
-  @Column
+  @Column(name = "roles")
   private String roles;
 
   @Override
