@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.ArticleResponse;
-import com.example.demo.dto.GeneralDataPaginationResponse;
-import com.example.demo.dto.SearchArticleRequest;
+import com.example.demo.dto.*;
 import com.example.demo.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -34,4 +32,5 @@ public class ArticleController {
 
     return ResponseEntity.ok(response);
   }
+
 }

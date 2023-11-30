@@ -1,11 +1,14 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.ArticleResponse;
-import com.example.demo.dto.GeneralDataPaginationResponse;
-import com.example.demo.dto.SearchArticleRequest;
+import com.example.demo.constants.AppConstants;
+import com.example.demo.dto.*;
+import com.example.demo.entity.User;
+import com.example.demo.exceptions.ConflictException;
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.service.ArticleService;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,4 +52,21 @@ public class ArticleServiceImpl implements ArticleService {
       .data(articles)
       .build();
   }
+
+  @Override
+  public CreateArticleResponse createArticle(CreateArticleRequest request) {
+
+    String sectionTitle = request.getSectionTitle();
+    String articleTitle = request.getArticleTitle();
+    String body = request.getBody();
+
+  }
+
+  private void checkArticle(String sectionTitle, String articleTitle, String body) {
+    Optional<CreateArticleResponse> articleRequest = articleRepository.createArticle(
+            sectionTitle, articleTitle, body
+    );
+  }
+
+
 }
