@@ -1,89 +1,52 @@
 package com.example.demo.auth;
 
 import com.example.demo.entity.User;
-import com.example.demo.entity.UserDetails;
 import com.example.demo.service.UserService;
 import com.example.demo.util.JwtUtil;
-import com.example.demo.util.ResponseUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.util.StringUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-@RequiredArgsConstructor
-public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-  private final AuthenticationManager authenticationManager;
   private final UserService userService;
 
-  @SneakyThrows
-  @Override
-  public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-    throws AuthenticationException {
-    if (!isJson(request) && !isFormUrlEncoded(request)) {
-      throw new BadCredentialsException("Don't use content type for " + request.getContentType());
-    }
-    String username = "";
-    String password = "";
-    if (isJson(request)) {
-      User user = new ObjectMapper().readValue(request.getReader(), User.class);
-      username = user.getUsername();
-      password = user.getPassword();
-    }
-    if (isFormUrlEncoded(request)) {
-      username = request.getParameter("username");
-      password = request.getParameter("password");
-    }
-    if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
-      throw new BadCredentialsException("Username or password not sent");
-    }
-    UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
-    return authenticationManager.authenticate(authRequest);
+  public JwtAuthenticationFilter(UserService userService) {
+    this.userService = userService;
   }
 
   @Override
-  protected void successfulAuthentication(
-    HttpServletRequest request,
-    HttpServletResponse response,
-    FilterChain chain,
-    Authentication authentication
-  ) throws IOException {
-    UserDetails user = (UserDetails) authentication.getPrincipal();
-    final String accessToken = JwtUtil.createToken(user);
-    final String refreshToken = JwtUtil.createRefreshToken(user);
-    ResponseUtil.responseTokensWithUserInfo(
-      response,
-      accessToken,
-      refreshToken,
-      userService.findUserAccountByUsername(user.getUsername())
-    );
-  }
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    throws ServletException, IOException {
+    final String authorizationHeader = request.getHeader("Authorization");
 
-  @Override
-  protected void unsuccessfulAuthentication(
-    HttpServletRequest request,
-    HttpServletResponse response,
-    AuthenticationException failed
-  ) throws IOException {
-    ResponseUtil.responseBadCredentials(response, failed);
-  }
+    String username = null;
+    String jwt = null;
 
-  private boolean isJson(HttpServletRequest request) {
-    return MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(request.getContentType());
-  }
+    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+      jwt = authorizationHeader.substring(7);
+      username = JwtUtil.getSubject(jwt);
+    }
 
-  private boolean isFormUrlEncoded(HttpServletRequest request) {
-    return MediaType.APPLICATION_FORM_URLENCODED_VALUE.equalsIgnoreCase(request.getContentType());
+    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+      User userDetails = userService.findUserAccountByUsername(username);
+
+      if (JwtUtil.verify(jwt)) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+          userDetails,
+          null,
+          null
+        );
+        authenticationToken.setDetails(userDetails);
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+      }
+    }
+
+    chain.doFilter(request, response);
   }
 }

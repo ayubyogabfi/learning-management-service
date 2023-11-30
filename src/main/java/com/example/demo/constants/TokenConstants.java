@@ -1,7 +1,5 @@
 package com.example.demo.constants;
 
-import com.auth0.jwt.algorithms.Algorithm;
-
 public class TokenConstants {
 
   public static final String ISSUER = "mendoza";

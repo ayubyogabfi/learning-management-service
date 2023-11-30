@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class SectionServiceImpl implements SectionService {
 
-  private final SectionRepository sectionRepository;
+  @Autowired
+  private SectionRepository sectionRepository;
 
   @Autowired
   public SectionServiceImpl(SectionRepository sectionRepository) {

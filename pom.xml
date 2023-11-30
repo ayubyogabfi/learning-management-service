@@ -11,10 +11,10 @@
         <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>api</artifactId>
+    <artifactId>learning-service</artifactId>
     <version>1.0.0</version>
     <name>rest-api-spring-boot</name>
-    <description>Training project API</description>
+    <description>Learning Management Service</description>
     <properties>
         <java.version>11</java.version>
         <prettier-maven-plugin.version>0.18</prettier-maven-plugin.version>
