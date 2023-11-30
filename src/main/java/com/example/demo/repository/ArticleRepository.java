@@ -23,7 +23,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpec
     value = "SELECT tas FROM ArticleSection tas\n" +
     "INNER JOIN Article ta ON ta.id = tas.articleId\n" +
     "INNER JOIN Section ts ON tas.sectionId = ts.id\n" +
-            "WHERE ta.createdBy = :username"
+    "WHERE ta.createdBy = :username"
   )
   List<ArticleResponse> findAllArticles();
 }

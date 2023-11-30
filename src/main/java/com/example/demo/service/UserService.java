@@ -13,5 +13,4 @@ public interface UserService {
   User create(UserDto user);
 
   User validateUserCredentials(String username, String password);
-
 }

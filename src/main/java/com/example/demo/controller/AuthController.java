@@ -49,11 +49,7 @@ public class AuthController {
     try {
       User user = userService.validateUserCredentials(loginRequest.getUsername(), loginRequest.getPassword());
 
-      String accessToken = JwtUtil.createToken(new UserDetails(
-              user.getUsername(),
-              user.getPassword(),
-              null
-      ));
+      String accessToken = JwtUtil.createToken(new UserDetails(user.getUsername(), user.getPassword(), null));
 
       LoginResponse response = new LoginResponse();
       response.setUsername(user.getUsername());

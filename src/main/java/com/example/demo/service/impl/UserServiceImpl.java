@@ -62,8 +62,9 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User validateUserCredentials(String username, String password) {
-    User user = userRepository.findUserAccountByUsername(username)
-            .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
+    User user = userRepository
+      .findUserAccountByUsername(username)
+      .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
 
     if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
       throw new BadCredentialsException("Invalid username or password");

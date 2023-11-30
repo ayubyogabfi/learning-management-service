@@ -1,6 +1,5 @@
 package com.example.demo.config;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,44 +20,41 @@ import org.springframework.web.bind.annotation.RestController;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
-
 public class SecurityConfig {
 
   @Bean
   public UserDetailsService userDetailsService(BCryptPasswordEncoder bCryptPasswordEncoder) {
     InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-    manager.createUser(User.withUsername("user")
-            .password(bCryptPasswordEncoder.encode("userPass"))
-            .roles("USER")
-            .build()
+    manager.createUser(
+      User.withUsername("user").password(bCryptPasswordEncoder.encode("userPass")).roles("USER").build()
     );
-    manager.createUser(User.withUsername("admin")
-            .password(bCryptPasswordEncoder.encode("adminPass"))
-            .roles("USER", "ADMIN")
-            .build());
+    manager.createUser(
+      User.withUsername("admin").password(bCryptPasswordEncoder.encode("adminPass")).roles("USER", "ADMIN").build()
+    );
     return manager;
   }
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf()
-            .disable()
-            .authorizeRequests()
-            .antMatchers(HttpMethod.DELETE)
-            .hasRole("ADMIN")
-            .antMatchers("/admin/**")
-            .hasAnyRole("ADMIN")
-            .antMatchers("/user/**")
-            .hasAnyRole("USER", "ADMIN")
-            .antMatchers("/login/**")
-            .anonymous()
-            .anyRequest()
-            .authenticated()
-            .and()
-            .httpBasic()
-            .and()
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    http
+      .csrf()
+      .disable()
+      .authorizeRequests()
+      .antMatchers(HttpMethod.DELETE)
+      .hasRole("ADMIN")
+      .antMatchers("/admin/**")
+      .hasAnyRole("ADMIN")
+      .antMatchers("/user/**")
+      .hasAnyRole("USER", "ADMIN")
+      .antMatchers("/login/**")
+      .anonymous()
+      .anyRequest()
+      .authenticated()
+      .and()
+      .httpBasic()
+      .and()
+      .sessionManagement()
+      .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     return http.build();
   }
