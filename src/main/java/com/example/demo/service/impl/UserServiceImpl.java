@@ -1,6 +1,8 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.constants.AppConstants;
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.LoginResponse;
 import com.example.demo.dto.UserDto;
 import com.example.demo.entity.User;
 import com.example.demo.exceptions.ConflictException;
@@ -60,16 +62,15 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User validateUserCredentials(String username, String password) {
-    User user = userRepository
-      .findUserAccountByUsername(username)
-      .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
+  public boolean validateUserCredentials(LoginRequest loginRequest) {
+    String encodedPassword = bCryptPasswordEncoder.encode(loginRequest.getPassword());
 
-    if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
-      throw new BadCredentialsException("Invalid username or password");
-    }
+    checkPassword(loginRequest.getUsername(), encodedPassword);
+    return true;
+  }
 
-    return user;
+  private void checkPassword(String username, String password) {
+    Optional<LoginResponse> user = userRepository.findUserByUsernameAndPassword(username, password);
   }
 
   private void checkUsername(String username) {

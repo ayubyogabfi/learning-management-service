@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.LoginResponse;
 import com.example.demo.dto.UserDto;
 import com.example.demo.entity.User;
@@ -12,5 +13,5 @@ public interface UserService {
 
   User create(UserDto user);
 
-  User validateUserCredentials(String username, String password);
+  boolean validateUserCredentials(LoginRequest loginRequest);
 }
