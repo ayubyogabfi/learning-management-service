@@ -60,28 +60,16 @@ public class UserServiceImpl implements UserService {
     return userRepository.save(newUser);
   }
 
-//  @Override
-//  public LoginResponse validateUserCredentials(String username, String password) {
-//    LoginResponse user = userRepository
-//      .findPasswordByUsername(username)
-//      .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
-//
-//    if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
-//      throw new BadCredentialsException("Invalid username or password");
-//    }
-//
-//    return user;
-//  }
-
   @Override
-  public LoginResponse validatePassword(String username, String password) {
-    LoginResponse logRes = userRepository.findPasswordByUsername(username);
-    var passLog = logRes.getPassword();
+  public User validateUserCredentials(String username, String password) {
+    User user = userRepository.findUserAccountByUsername(username)
+            .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
 
-    if(!bCryptPasswordEncoder.matches(passLog, password)) {
-      throw new BadCredentialsException("salah salah salah");
+    if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
+      throw new BadCredentialsException("Invalid username or password");
     }
-    return logRes;
+
+    return user;
   }
 
   private void checkUsername(String username) {

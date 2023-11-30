@@ -12,7 +12,6 @@ public interface UserService {
 
   User create(UserDto user);
 
-//  LoginResponse validateUserCredentials(String username, String password);
+  User validateUserCredentials(String username, String password);
 
-  LoginResponse validatePassword(String username, String password);
 }
