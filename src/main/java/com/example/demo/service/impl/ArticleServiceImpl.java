@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ArticleServiceImpl implements ArticleService {
 
-  private final ArticleRepository articleRepository;
+  @Autowired
+  private ArticleRepository articleRepository;
 
   @Autowired
   public ArticleServiceImpl(ArticleRepository articleRepository) {
@@ -30,6 +31,17 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     List<ArticleResponse> articles = articleRepository.findArticleByKeyword(request.getKeyword());
+
+    return GeneralDataPaginationResponse
+      .<ArticleResponse>builder()
+      .pagination(new GeneralDataPaginationResponse.Pagination(2, 2))
+      .data(articles)
+      .build();
+  }
+
+  @Override
+  public GeneralDataPaginationResponse<ArticleResponse> findAll() {
+    List<ArticleResponse> articles = articleRepository.findAllArticles();
 
     return GeneralDataPaginationResponse
       .<ArticleResponse>builder()

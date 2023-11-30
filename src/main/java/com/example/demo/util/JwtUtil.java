@@ -54,7 +54,7 @@ public class JwtUtil {
     return createToken(userDetails, DateUtil.nowAfterDaysToDate(TokenConstants.EXPIRES_LIMIT));
   }
 
-  public static Boolean verify(String token) {
+  public static Boolean verify(String token, User userDetails) {
     try {
       JWTVerifier verifier = JWT.require(getAlgorithm()).build();
       verifier.verify(token);

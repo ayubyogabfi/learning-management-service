@@ -1,13 +1,9 @@
 package com.example.demo.entity;
 
-import com.example.demo.entity.BaseEntity;
 import javax.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter
-@Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tx_article")

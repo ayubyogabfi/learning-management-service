@@ -5,7 +5,6 @@ import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @Setter
@@ -13,12 +12,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class BaseEntity {
 
   @CreationTimestamp
-  @Column(name = "created_at", updatable = false, nullable = false)
-  protected Instant createdAt;
-
-  @UpdateTimestamp
-  @Column(name = "modified_at")
-  protected Instant modifiedAt;
+  @Column(name = "created_date", updatable = false, nullable = false)
+  protected Instant createdDate;
 
   @Column(name = "created_by")
   private String createdBy;
@@ -34,4 +29,7 @@ public class BaseEntity {
 
   @Column(name = "updated_from")
   private String updatedFrom;
+
+  @Column(name = "deleted_date")
+  private String deletedDate;
 }

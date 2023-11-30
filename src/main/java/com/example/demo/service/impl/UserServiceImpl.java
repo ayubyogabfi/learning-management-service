@@ -1,10 +1,8 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.constants.AppConstants;
-import com.example.demo.dto.LoginResponse;
 import com.example.demo.dto.UserDto;
 import com.example.demo.entity.User;
-import com.example.demo.entity.UserDetails;
 import com.example.demo.exceptions.ConflictException;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.repository.UserRepository;
@@ -13,9 +11,9 @@ import java.util.Collection;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-  private final UserRepository userRepository;
-  private final BCryptPasswordEncoder bCryptPasswordEncoder;
-  private final PasswordEncoder passwordEncoder;
+  @Autowired
+  private UserRepository userRepository;
+
+  @Autowired
+  private BCryptPasswordEncoder bCryptPasswordEncoder;
 
   @Override
   public Collection<User> findAll() {
@@ -60,13 +60,12 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public LoginResponse validateUserCredentials(String username, String password) {
-    LoginResponse user = userRepository
-      .findPasswordByUsername(username)
+  public User validateUserCredentials(String username, String password) {
+    User user = userRepository
+      .findUserAccountByUsername(username)
       .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
 
-    var decryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-    if (!bCryptPasswordEncoder.matches(password, decryptedPassword)) {
+    if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
       throw new BadCredentialsException("Invalid username or password");
     }
 
@@ -85,11 +84,5 @@ public class UserServiceImpl implements UserService {
     if (user.isPresent()) {
       throw new ConflictException("The email already exists.");
     }
-  }
-
-  @Override
-  public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String username) {
-    User user = findUserAccountByUsername(username);
-    return new UserDetails(user.getUsername(), user.getPassword(), null);
   }
 }
