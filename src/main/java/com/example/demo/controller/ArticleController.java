@@ -40,8 +40,8 @@ public class ArticleController {
     description = "Create an article"
   )
   @PostMapping("/create")
-  public ResponseEntity<Article> createArticle(@Valid @RequestBody CreateArticleRequest request) {
-    Article response = articleService.createArticle(request);
+  public ResponseEntity<CreateArticleResponse> createArticle(@Valid @RequestBody CreateArticleRequest request) {
+    CreateArticleResponse response = articleService.createArticle(request);
 
     return ResponseEntity.ok(response);
   }

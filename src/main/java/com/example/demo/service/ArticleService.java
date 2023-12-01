@@ -8,5 +8,5 @@ public interface ArticleService {
 
   GeneralDataPaginationResponse<ArticleResponse> findAll();
 
-  Article createArticle(CreateArticleRequest request);
+  CreateArticleResponse createArticle(CreateArticleRequest request);
 }

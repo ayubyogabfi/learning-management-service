@@ -1,16 +1,12 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.ArticleResponse;
-import com.example.demo.dto.CreateArticleRequest;
-import com.example.demo.dto.GeneralDataPaginationResponse;
-import com.example.demo.dto.SearchArticleRequest;
+import com.example.demo.dto.*;
 import com.example.demo.entity.Article;
-import com.example.demo.entity.ArticleSection;
 import com.example.demo.entity.Section;
 import com.example.demo.exceptions.BadRequestException;
 import com.example.demo.exceptions.ConflictException;
 import com.example.demo.repository.ArticleRepository;
-import com.example.demo.repository.ArticleSectionRepository;
+import com.example.demo.repository.CreateArticleRepository;
 import com.example.demo.repository.SectionRepository;
 import com.example.demo.service.ArticleService;
 import java.time.LocalDateTime;
@@ -27,10 +23,10 @@ public class ArticleServiceImpl implements ArticleService {
   private ArticleRepository articleRepository;
 
   @Autowired
-  private ArticleSectionRepository articleSectionRepository;
+  private SectionRepository sectionRepository;
 
   @Autowired
-  private SectionRepository sectionRepository;
+  private CreateArticleRepository createArticleRepository;
 
   @Autowired
   public ArticleServiceImpl(ArticleRepository articleRepository) {
@@ -68,37 +64,41 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   @Override
-  public Article createArticle(CreateArticleRequest request) {
-    checkSection(request.getSectionId()); // check if section id available or not
-    checkArticle(request.getArticleTitle(), request.getSectionTitle(), request.getSectionId()); //check article already on db or not
+  public CreateArticleResponse createArticle(CreateArticleRequest request) {
+    checkSectionId(request.getSectionId());
+    checkSectionTitle(request.getSectionTitle());
+    checkArticle(request.getArticleTitle()); //check article already on db or not
 
-    Article newArticle = new Article();
+    CreateArticleResponse newArticle = new CreateArticleResponse();
     newArticle.setSectionTitle(request.getSectionTitle());
     newArticle.setArticleTitle(request.getArticleTitle());
     newArticle.setBody(request.getBody());
-    newArticle.setCreatedBy("user"); // will be developed further
+    newArticle.setCreatedBy("admin"); // will be developed further
     newArticle.setCreatedDate(LocalDateTime.now(ZoneId.systemDefault()));
-    newArticle.setCreatedFrom("user"); // will be developed further
+    newArticle.setCreatedFrom("localhost"); // will be developed further
 
-    return articleRepository.save(newArticle);
+    return createArticleRepository.save(newArticle);
   }
 
-  private void checkArticle(String articleTitle, String sectionTitle, String sectionId) {
-    Optional<ArticleSection> articleSection = articleSectionRepository.findArticleSectionByArticleTitleAndSectionTitleOrSectionId(
-      articleTitle,
-      sectionTitle,
-      sectionId
-    );
+  private void checkArticle(String articleTitle) {
+    Optional<Article> articleSection = articleRepository.findArticleOnDatabase(articleTitle);
 
     if (articleSection.isPresent()) {
       throw new ConflictException("Article already exist");
     }
   }
 
-  private void checkSection(String sectionId) {
-    Optional<Section> section = sectionRepository.findSectionBySectionId(sectionId);
-    if (section.isEmpty()) {
+  private void checkSectionId(String sectionId) {
+    Optional<Section> sectionById = sectionRepository.findSectionIdOnArticleSection(sectionId);
+    if (sectionById.isEmpty()) {
       throw new BadRequestException("Section not available on Database");
+    }
+  }
+
+  private void checkSectionTitle(String sectionTitle) {
+    Optional<Section> sectionByTitle = sectionRepository.findSectionTitleOnArticleSection(sectionTitle);
+    if (sectionByTitle.isEmpty()) {
+      sectionRepository.createSectionBySectionTitle(sectionTitle);
     }
   }
 }
