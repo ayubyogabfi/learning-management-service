@@ -4,6 +4,7 @@ import javax.persistence.*;
 import lombok.*;
 
 @Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tx_article")
@@ -14,11 +15,8 @@ public class Article extends BaseEntity {
   @Column(name = "id")
   private Long id;
 
-  @Column(name = "section_title")
-  private String sectionTitle;
-
-  @Column(name = "article_title")
-  private String articleTitle;
+  @Column(name = "title")
+  private String title;
 
   @Column(name = "body")
   private String body;

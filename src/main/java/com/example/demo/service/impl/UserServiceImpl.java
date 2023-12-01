@@ -9,12 +9,10 @@ import com.example.demo.exceptions.ConflictException;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
-import java.util.Collection;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,12 +28,6 @@ public class UserServiceImpl implements UserService {
 
   @Autowired
   private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-  @Override
-  public Collection<User> findAll() {
-    log.info(AppConstants.FIND_ALL_LOG);
-    return userRepository.findAll();
-  }
 
   @Override
   public User findUserAccountByUsername(String username) {
