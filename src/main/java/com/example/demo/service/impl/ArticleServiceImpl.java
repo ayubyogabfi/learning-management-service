@@ -6,9 +6,12 @@ import com.example.demo.dto.GeneralDataPaginationResponse;
 import com.example.demo.dto.SearchArticleRequest;
 import com.example.demo.entity.Article;
 import com.example.demo.entity.ArticleSection;
+import com.example.demo.entity.Section;
+import com.example.demo.exceptions.BadRequestException;
 import com.example.demo.exceptions.ConflictException;
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.repository.ArticleSectionRepository;
+import com.example.demo.repository.SectionRepository;
 import com.example.demo.service.ArticleService;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -25,6 +28,9 @@ public class ArticleServiceImpl implements ArticleService {
 
   @Autowired
   private ArticleSectionRepository articleSectionRepository;
+
+  @Autowired
+  private SectionRepository sectionRepository;
 
   @Autowired
   public ArticleServiceImpl(ArticleRepository articleRepository) {
@@ -63,7 +69,8 @@ public class ArticleServiceImpl implements ArticleService {
 
   @Override
   public Article createArticle(CreateArticleRequest request) {
-    checkArticle(request.getArticleTitle(), request.getSectionTitle(), request.getSectionId());
+    checkSection(request.getSectionId()); // check if section id available or not
+    checkArticle(request.getArticleTitle(), request.getSectionTitle(), request.getSectionId()); //check article already on db or not
 
     Article newArticle = new Article();
     newArticle.setSectionTitle(request.getSectionTitle());
@@ -85,6 +92,13 @@ public class ArticleServiceImpl implements ArticleService {
 
     if (articleSection.isPresent()) {
       throw new ConflictException("Article already exist");
+    }
+  }
+
+  private void checkSection(String sectionId) {
+    Optional<Section> section = sectionRepository.findSectionBySectionId(sectionId);
+    if (section.isEmpty()) {
+      throw new BadRequestException("Section not available on Database");
     }
   }
 }
