@@ -1,23 +1,27 @@
 package com.example.demo.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class CreateArticleRequest {
 
-  @JsonProperty(value = "section_title")
-  private String sectionTitle;
-
-  @JsonProperty(value = "article_title")
+  @NotBlank(message = "Article title must not be empty")
+  @Size(min = 3, message = "Article title must be at least 3 characters long")
+  @JsonProperty("articleTitle")
   private String articleTitle;
 
-  @JsonProperty(value = "body")
+  @NotBlank(message = "Section title must not be empty")
+  @Size(min = 3, message = "Section title must be at least 3 characters long")
+  @JsonProperty("sectionTitle")
+  private String sectionTitle;
+
+  @NotBlank(message = "Body must not be empty")
+  @Size(min = 3, message = "Body must be at least 3 characters long")
   private String body;
 }

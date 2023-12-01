@@ -1,16 +1,14 @@
 package com.example.demo.repository;
 
 import com.example.demo.dto.ArticleResponse;
-import com.example.demo.dto.CreateArticleResponse;
 import com.example.demo.entity.Article;
+import com.example.demo.entity.ArticleSection;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.parameters.P;
 
 public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpecificationExecutor<Article> {
   @Query(
@@ -31,9 +29,5 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpec
   )
   List<ArticleResponse> findAllArticles();
 
-  Optional<CreateArticleResponse> createArticle(
-          @Param("section_title") String sectionTitle,
-          @Param("article_title") String articleTitle,
-          @Param("body") String body
-  );
+  Optional<ArticleSection> findArticleSectionByArticleTitleAndSectionTitle(String articleTitle, String sectionTitle);
 }

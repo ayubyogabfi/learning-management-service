@@ -4,6 +4,8 @@ import javax.persistence.*;
 import lombok.*;
 
 @Entity
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tx_article")

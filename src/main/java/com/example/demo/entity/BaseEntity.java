@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +13,7 @@ public class BaseEntity {
 
   @CreationTimestamp
   @Column(name = "created_date", updatable = false, nullable = false)
-  protected Instant createdDate;
+  protected LocalDateTime createdDate;
 
   @Column(name = "created_by")
   private String createdBy;
@@ -22,7 +22,7 @@ public class BaseEntity {
   private String createdFrom;
 
   @Column(name = "updated_date")
-  private String updatedDate;
+  private LocalDateTime updatedDate;
 
   @Column(name = "updated_by")
   private String updatedBy;
@@ -31,5 +31,5 @@ public class BaseEntity {
   private String updatedFrom;
 
   @Column(name = "deleted_date")
-  private String deletedDate;
+  private LocalDateTime deletedDate;
 }

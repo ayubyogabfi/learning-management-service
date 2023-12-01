@@ -1,14 +1,18 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.constants.AppConstants;
-import com.example.demo.dto.*;
-import com.example.demo.entity.User;
+import com.example.demo.dto.ArticleResponse;
+import com.example.demo.dto.CreateArticleRequest;
+import com.example.demo.dto.GeneralDataPaginationResponse;
+import com.example.demo.dto.SearchArticleRequest;
+import com.example.demo.entity.Article;
+import com.example.demo.entity.ArticleSection;
 import com.example.demo.exceptions.ConflictException;
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.service.ArticleService;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,19 +58,28 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   @Override
-  public CreateArticleResponse createArticle(CreateArticleRequest request) {
+  public Article createArticle(CreateArticleRequest request) {
+    checkArticle(request.getArticleTitle(), request.getSectionTitle());
 
-    String sectionTitle = request.getSectionTitle();
-    String articleTitle = request.getArticleTitle();
-    String body = request.getBody();
+    Article newArticle = new Article();
+    newArticle.setSectionTitle(request.getSectionTitle());
+    newArticle.setArticleTitle(request.getArticleTitle());
+    newArticle.setBody(request.getBody());
+    newArticle.setCreatedBy("user"); // will be developed further
+    newArticle.setCreatedDate(LocalDateTime.now(ZoneId.systemDefault()));
+    newArticle.setCreatedFrom("user"); // will be developed further
 
+    return articleRepository.save(newArticle);
   }
 
-  private void checkArticle(String sectionTitle, String articleTitle, String body) {
-    Optional<CreateArticleResponse> articleRequest = articleRepository.createArticle(
-            sectionTitle, articleTitle, body
+  private void checkArticle(String articleTitle, String sectionTitle) {
+    Optional<ArticleSection> articleSection = articleRepository.findArticleSectionByArticleTitleAndSectionTitle(
+      articleTitle,
+      sectionTitle
     );
+
+    if (articleSection.isPresent()) {
+      throw new ConflictException("Article already exist");
+    }
   }
-
-
 }
