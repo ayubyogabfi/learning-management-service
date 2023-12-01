@@ -15,7 +15,7 @@ public class Article extends BaseEntity {
   @Column(name = "id")
   private Long id;
 
-  @Column(name = "article_title")
+  @Column(name = "title")
   private String title;
 
   @Column(name = "body")

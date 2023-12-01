@@ -65,40 +65,45 @@ public class ArticleServiceImpl implements ArticleService {
 
   @Override
   public CreateArticleResponse createArticle(CreateArticleRequest request) {
-    checkSectionId(request.getSectionId());
-    checkSectionTitle(request.getSectionTitle());
-    checkArticle(request.getArticleTitle()); //check article already on db or not
+    if (!request.getSectionId().isEmpty()) {
+      checkSectionId(request.getSectionId(), request.getUserId());
+    }
+    if (!request.getSectionTitle().isEmpty()) {
+      checkSectionTitle(request.getSectionTitle(), request.getUserId());
+    }
+
+    checkArticle(request.getArticleTitle(), request.getUserId()); //check article already on db or not
 
     CreateArticleResponse newArticle = new CreateArticleResponse();
     newArticle.setSectionTitle(request.getSectionTitle());
     newArticle.setArticleTitle(request.getArticleTitle());
     newArticle.setBody(request.getBody());
-    newArticle.setCreatedBy("admin"); // will be developed further
+    newArticle.setCreatedBy(request.getUserId()); // will be developed further
     newArticle.setCreatedDate(LocalDateTime.now(ZoneId.systemDefault()));
     newArticle.setCreatedFrom("localhost"); // will be developed further
 
     return createArticleRepository.save(newArticle);
   }
 
-  private void checkArticle(String articleTitle) {
-    Optional<Article> articleSection = articleRepository.findArticleOnDatabase(articleTitle);
+  private void checkArticle(String articleTitle, String userId) {
+    Optional<Article> articleSection = articleRepository.findArticleOnDatabase(articleTitle, userId);
 
     if (articleSection.isPresent()) {
       throw new ConflictException("Article already exist");
     }
   }
 
-  private void checkSectionId(String sectionId) {
-    Optional<Section> sectionById = sectionRepository.findSectionIdOnArticleSection(sectionId);
+  private void checkSectionId(String sectionId, String userId) {
+    Optional<Section> sectionById = sectionRepository.findSectionIdOnArticleSection(sectionId, userId);
     if (sectionById.isEmpty()) {
       throw new BadRequestException("Section not available on Database");
     }
   }
 
-  private void checkSectionTitle(String sectionTitle) {
-    Optional<Section> sectionByTitle = sectionRepository.findSectionTitleOnArticleSection(sectionTitle);
+  private void checkSectionTitle(String sectionTitle, String userId) {
+    Optional<Section> sectionByTitle = sectionRepository.findSectionTitleOnArticleSection(sectionTitle, userId);
     if (sectionByTitle.isEmpty()) {
-      sectionRepository.createSectionBySectionTitle(sectionTitle);
+      sectionRepository.createSectionBySectionTitle(sectionTitle, userId);
     }
   }
 }

@@ -83,7 +83,7 @@ class ArticleServiceImplTest {
     article.setUpdatedDate(LocalDate.of(2023, 11, 11).atStartOfDay());
     article.setUpdatedFrom("2022-11-11");
     Optional<Article> ofResult = Optional.of(article);
-    when(articleRepository.findArticleOnDatabase(Mockito.<String>any())).thenReturn(ofResult);
+    when(articleRepository.findArticleOnDatabase(Mockito.<String>any(), Mockito.<String>any())).thenReturn(ofResult);
 
     Section section = getSection();
     Optional<Section> ofResult2 = Optional.of(section);
@@ -100,8 +100,8 @@ class ArticleServiceImplTest {
     section2.setUpdatedDate(LocalDate.of(2023, 11, 11).atStartOfDay());
     section2.setUpdatedFrom("2022-11-11");
     Optional<Section> ofResult3 = Optional.of(section2);
-    when(sectionRepository.findSectionTitleOnArticleSection(Mockito.<String>any())).thenReturn(ofResult3);
-    when(sectionRepository.findSectionIdOnArticleSection(Mockito.<String>any())).thenReturn(ofResult2);
+    when(sectionRepository.findSectionTitleOnArticleSection(Mockito.<String>any(), Mockito.<String>any())).thenReturn(ofResult3);
+    when(sectionRepository.findSectionIdOnArticleSection(Mockito.<String>any(), Mockito.<String>any())).thenReturn(ofResult2);
 
     CreateArticleRequest request = new CreateArticleRequest();
     request.setArticleTitle("article_title");
@@ -109,9 +109,9 @@ class ArticleServiceImplTest {
     request.setSectionId("42");
     request.setSectionTitle("article_title");
     assertThrows(ConflictException.class, () -> articleServiceImpl.createArticle(request));
-    verify(articleRepository).findArticleOnDatabase(Mockito.<String>any());
-    verify(sectionRepository).findSectionIdOnArticleSection(Mockito.<String>any());
-    verify(sectionRepository).findSectionTitleOnArticleSection(Mockito.<String>any());
+    verify(articleRepository).findArticleOnDatabase(Mockito.<String>any(), Mockito.<String>any());
+    verify(sectionRepository).findSectionIdOnArticleSection(Mockito.<String>any(), Mockito.<String>any());
+    verify(sectionRepository).findSectionTitleOnArticleSection(Mockito.<String>any(), Mockito.<String>any());
   }
 
   private static Section getSection() {

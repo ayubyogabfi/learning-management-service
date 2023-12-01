@@ -16,23 +16,23 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
     value = "SELECT ts from Section INNER JOIN ArticleSection tas \n" +
     "ON ts.id = tas.section_id WHERE :sectionId = ts.id" +
     "AND tas.deleted_date = null " +
-    "AND ts.created_by = 'admin'" // will be developed further
+    "AND ts.created_by = :userId " // will be developed further
   )
-  Optional<Section> findSectionIdOnArticleSection(String sectionId);
+  Optional<Section> findSectionIdOnArticleSection(String sectionId, String userId);
 
   @Query(
     value = "SELECT ts from Section INNER JOIN ArticleSection tas \n" +
     "ON ts.id = tas.section_id WHERE :sectionTitle = ts.title" +
     "AND tas.deleted_date = null " +
-    "AND ts.created_by = 'admin'" // will be developed further
+    "AND ts.created_by = ':userId" // will be developed further
   )
-  Optional<Section> findSectionTitleOnArticleSection(String sectionTitle);
+  Optional<Section> findSectionTitleOnArticleSection(String sectionTitle, String userId);
 
   @Modifying
   @Query(
     value = "INSERT INTO Section (id, title, body, created_by, created_from, " +
     "deleted_date) values (nextval('tm_section_id_seq'::regclass), :sectionTitle, " +
-    "null, 'admin', 'localhost', null)" //will developed further
+    "null, :userId, 'localhost', null)" //will developed further
   )
-  void createSectionBySectionTitle(String sectionTitle);
+  void createSectionBySectionTitle(String sectionTitle, String userId);
 }
