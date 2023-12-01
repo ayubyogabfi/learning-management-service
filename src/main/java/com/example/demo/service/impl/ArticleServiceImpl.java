@@ -8,6 +8,7 @@ import com.example.demo.entity.Article;
 import com.example.demo.entity.ArticleSection;
 import com.example.demo.exceptions.ConflictException;
 import com.example.demo.repository.ArticleRepository;
+import com.example.demo.repository.ArticleSectionRepository;
 import com.example.demo.service.ArticleService;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -21,6 +22,9 @@ public class ArticleServiceImpl implements ArticleService {
 
   @Autowired
   private ArticleRepository articleRepository;
+
+  @Autowired
+  private ArticleSectionRepository articleSectionRepository;
 
   @Autowired
   public ArticleServiceImpl(ArticleRepository articleRepository) {
@@ -59,7 +63,7 @@ public class ArticleServiceImpl implements ArticleService {
 
   @Override
   public Article createArticle(CreateArticleRequest request) {
-    checkArticle(request.getArticleTitle(), request.getSectionTitle());
+    checkArticle(request.getArticleTitle(), request.getSectionTitle(), request.getSectionId());
 
     Article newArticle = new Article();
     newArticle.setSectionTitle(request.getSectionTitle());
@@ -72,10 +76,11 @@ public class ArticleServiceImpl implements ArticleService {
     return articleRepository.save(newArticle);
   }
 
-  private void checkArticle(String articleTitle, String sectionTitle) {
-    Optional<ArticleSection> articleSection = articleRepository.findArticleSectionByArticleTitleAndSectionTitle(
+  private void checkArticle(String articleTitle, String sectionTitle, String sectionId) {
+    Optional<ArticleSection> articleSection = articleSectionRepository.findArticleSectionByArticleTitleAndSectionTitleOrSectionId(
       articleTitle,
-      sectionTitle
+      sectionTitle,
+      sectionId
     );
 
     if (articleSection.isPresent()) {

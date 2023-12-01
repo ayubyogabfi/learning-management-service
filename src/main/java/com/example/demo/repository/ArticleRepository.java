@@ -28,6 +28,4 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpec
     "WHERE ta.createdBy = :username"
   )
   List<ArticleResponse> findAllArticles();
-
-  Optional<ArticleSection> findArticleSectionByArticleTitleAndSectionTitle(String articleTitle, String sectionTitle);
 }

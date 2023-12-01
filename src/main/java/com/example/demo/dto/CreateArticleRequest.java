@@ -16,8 +16,10 @@ public class CreateArticleRequest {
   @JsonProperty("articleTitle")
   private String articleTitle;
 
-  @NotBlank(message = "Section title must not be empty")
-  @Size(min = 3, message = "Section title must be at least 3 characters long")
+  // Optional: Either section ID or section Title
+  @JsonProperty("sectionId")
+  private String sectionId;
+
   @JsonProperty("sectionTitle")
   private String sectionTitle;
 
