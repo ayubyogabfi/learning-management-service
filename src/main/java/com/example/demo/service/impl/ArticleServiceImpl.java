@@ -9,12 +9,11 @@ import com.example.demo.repository.ArticleRepository;
 import com.example.demo.repository.CreateArticleRepository;
 import com.example.demo.repository.SectionRepository;
 import com.example.demo.service.ArticleService;
+import com.example.demo.util.JwtUtil;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
-
-import com.example.demo.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +36,6 @@ public class ArticleServiceImpl implements ArticleService {
 
   @Override
   public GeneralDataPaginationResponse<ArticleResponse> searchArticle(SearchArticleRequest request, String token) {
-
     String extractedUsername = JwtUtil.getSubject(token);
 
     if (request.getKeyword() == null || request.getKeyword().trim().length() < 3) {
@@ -59,7 +57,6 @@ public class ArticleServiceImpl implements ArticleService {
 
   @Override
   public GeneralDataPaginationResponse<ArticleResponse> findAll(String token) {
-
     String extractedUsername = JwtUtil.getSubject(token);
 
     List<ArticleResponse> articles = articleRepository.findAllArticles(extractedUsername);
@@ -110,7 +107,10 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   private void checkSectionTitle(String sectionTitle, String extractedUsername) {
-    Optional<Section> sectionByTitle = sectionRepository.findSectionTitleOnArticleSection(sectionTitle, extractedUsername);
+    Optional<Section> sectionByTitle = sectionRepository.findSectionTitleOnArticleSection(
+      sectionTitle,
+      extractedUsername
+    );
     if (sectionByTitle.isEmpty()) {
       sectionRepository.createSectionBySectionTitle(sectionTitle, extractedUsername);
     }

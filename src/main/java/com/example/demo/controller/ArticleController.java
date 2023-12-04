@@ -41,8 +41,10 @@ public class ArticleController {
     description = "Create an article"
   )
   @PostMapping("/create")
-  public ResponseEntity<CreateArticleResponse> createArticle(@Valid @RequestBody CreateArticleRequest request,
-                                                             @RequestBody String token) {
+  public ResponseEntity<CreateArticleResponse> createArticle(
+    @Valid @RequestBody CreateArticleRequest request,
+    @RequestBody String token
+  ) {
     CreateArticleResponse response = articleService.createArticle(request, token);
 
     return ResponseEntity.ok(response);
