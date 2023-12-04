@@ -85,6 +85,26 @@ public class ArticleServiceImpl implements ArticleService {
     return createArticleRepository.save(newArticle);
   }
 
+  @Override
+  public UpdateArticleResponse updateArticle(UpdateArticleRequest request) {
+    if (!request.getSectionTitle().isEmpty()) {
+      checkSectionTitle(request.getSectionTitle(), request.getUserId());
+    }
+
+    checkArticle(request.getArticleTitle(), request.getUserId());
+    UpdateArticleResponse newArticle =  UpdateArticleResponse
+            .builder()
+            .articleTitle(request.getArticleTitle())
+            .sectionTitle(request.getSectionTitle())
+            .body(request.getBody())
+            .updatedBy(request.getUserId())
+            .updatedDate(LocalDateTime.now(ZoneId.systemDefault()))
+            .updatedFrom("localhost")
+            .build();
+
+    return articleRepository.updateArticle(request);
+  }
+
   private void checkArticle(String articleTitle, String userId) {
     Optional<Article> articleSection = articleRepository.findArticleOnDatabase(articleTitle, userId);
 

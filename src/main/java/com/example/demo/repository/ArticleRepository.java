@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.dto.ArticleResponse;
+import com.example.demo.dto.UpdateArticleResponse;
 import com.example.demo.entity.Article;
 import java.util.List;
 import java.util.Optional;
@@ -35,4 +36,15 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpec
     "AND ta.createdBy = :userId "
   )
   Optional<Article> findArticleOnDatabase(@Param("articleTitle") String articleTitle, String userId);
+
+  @Query(
+          value = "SELECT"
+  )
+  Optional<UpdateArticleResponse> updateArticle(
+          @Param("articleTitle") String articleTitle,
+          @Param("sectionTitle") String sectionTitle,
+          @Param("body") String body
+  );
+
+
 }

@@ -9,4 +9,7 @@ public interface ArticleService {
   GeneralDataPaginationResponse<ArticleResponse> findAll();
 
   CreateArticleResponse createArticle(CreateArticleRequest request);
+
+  UpdateArticleResponse updateArticle(UpdateArticleRequest request);
+
 }
