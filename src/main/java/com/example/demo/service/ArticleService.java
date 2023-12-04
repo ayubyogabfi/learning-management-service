@@ -7,5 +7,5 @@ public interface ArticleService {
 
   GeneralDataPaginationResponse<ArticleResponse> findAll(String token);
 
-  CreateArticleResponse createArticle(CreateArticleRequest request, String token);
+  CreateArticleResponse createArticle(CreateArticleRequest request);
 }

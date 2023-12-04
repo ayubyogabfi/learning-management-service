@@ -7,8 +7,6 @@ import javax.persistence.Column;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-@Setter
-@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

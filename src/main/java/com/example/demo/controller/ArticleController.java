@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.*;
 import com.example.demo.entity.Article;
 import com.example.demo.service.ArticleService;
+import com.example.demo.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import javax.validation.Valid;
@@ -42,10 +43,9 @@ public class ArticleController {
   )
   @PostMapping("/create")
   public ResponseEntity<CreateArticleResponse> createArticle(
-    @Valid @RequestBody CreateArticleRequest request,
-    @RequestBody String token
+    @Valid @RequestBody CreateArticleRequest request
   ) {
-    CreateArticleResponse response = articleService.createArticle(request, token);
+    CreateArticleResponse response = articleService.createArticle(request);
 
     return ResponseEntity.ok(response);
   }

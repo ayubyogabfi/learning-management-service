@@ -69,8 +69,8 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   @Override
-  public CreateArticleResponse createArticle(CreateArticleRequest request, String token) {
-    String extractedUsername = JwtUtil.getSubject(token);
+  public CreateArticleResponse createArticle(CreateArticleRequest request) {
+    String extractedUsername = JwtUtil.getSubject(request.getToken()); // get username from token
     if (!request.getSectionId().isEmpty()) {
       checkSectionId(request.getSectionId(), extractedUsername);
     }
@@ -80,13 +80,14 @@ public class ArticleServiceImpl implements ArticleService {
 
     checkArticle(request.getArticleTitle(), extractedUsername); //check article already on db or not
 
-    CreateArticleResponse newArticle = new CreateArticleResponse();
-    newArticle.setSectionTitle(request.getSectionTitle());
-    newArticle.setArticleTitle(request.getArticleTitle());
-    newArticle.setBody(request.getBody());
-    newArticle.setCreatedBy(extractedUsername);
-    newArticle.setCreatedDate(LocalDateTime.now(ZoneId.systemDefault()));
-    newArticle.setCreatedFrom("localhost"); // will be developed further
+    CreateArticleResponse newArticle = CreateArticleResponse.builder()
+            .articleTitle(request.getArticleTitle())
+            .body(request.getBody())
+            .sectionTitle(request.getSectionTitle())
+            .createdBy(extractedUsername)
+            .createdFrom("localhost") // will be developed further
+            .createdDate(LocalDateTime.now(ZoneId.systemDefault()))
+            .build();
 
     return createArticleRepository.save(newArticle);
   }
