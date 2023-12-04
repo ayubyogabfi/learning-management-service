@@ -43,7 +43,7 @@ class ArticleControllerTest {
     GeneralDataPaginationResponse.GeneralDataPaginationResponseBuilder<ArticleResponse> paginationResult = filterResult.pagination(
       GeneralDataPaginationResponse.Pagination.builder().nextPage(1).totalPage(1).build()
     );
-    when(articleService.searchArticle(Mockito.<SearchArticleRequest>any(), Mockito.<String>any()))
+    when(articleService.searchArticle(Mockito.<SearchArticleRequest>any()))
       .thenReturn(paginationResult.sort(GeneralDataPaginationResponse.Sort.builder().order("ASC").build()).build());
 
     SearchArticleRequest searchArticleRequest = new SearchArticleRequest();

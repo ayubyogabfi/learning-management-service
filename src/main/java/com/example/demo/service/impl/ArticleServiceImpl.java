@@ -35,8 +35,8 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   @Override
-  public GeneralDataPaginationResponse<ArticleResponse> searchArticle(SearchArticleRequest request, String token) {
-    String extractedUsername = JwtUtil.getSubject(token);
+  public GeneralDataPaginationResponse<ArticleResponse> searchArticle(SearchArticleRequest request) {
+    String extractedUsername = JwtUtil.getSubject(request.getToken());
 
     if (request.getKeyword() == null || request.getKeyword().trim().length() < 3) {
       return GeneralDataPaginationResponse

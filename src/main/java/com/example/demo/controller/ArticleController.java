@@ -28,10 +28,9 @@ public class ArticleController {
   )
   @PostMapping(value = "/{article-title}")
   public ResponseEntity<GeneralDataPaginationResponse<ArticleResponse>> searchArticle(
-    @Valid @RequestBody SearchArticleRequest request,
-    @RequestBody String token
+    @Valid @RequestBody SearchArticleRequest request
   ) {
-    GeneralDataPaginationResponse<ArticleResponse> response = articleService.searchArticle(request, token);
+    GeneralDataPaginationResponse<ArticleResponse> response = articleService.searchArticle(request);
 
     return ResponseEntity.ok(response);
   }

@@ -14,4 +14,6 @@ public class SearchArticleRequest {
   @NotEmpty(message = "Keyword must not be empty")
   @JsonProperty(value = "keyword")
   private String keyword;
+
+  private String token;
 }
