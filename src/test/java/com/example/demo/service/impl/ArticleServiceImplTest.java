@@ -46,9 +46,10 @@ class ArticleServiceImplTest {
 
   @Test
   void testSearchArticle() {
-    when(articleRepository.findArticleByKeyword(Mockito.<String>any())).thenReturn(new ArrayList<>());
+    when(articleRepository.findArticleByKeyword(Mockito.<String>any(), Mockito.<String>any())).thenReturn(new ArrayList<>());
     GeneralDataPaginationResponse<ArticleResponse> actualSearchArticleResult = articleServiceImpl.searchArticle(
-      new SearchArticleRequest("Keyword")
+      new SearchArticleRequest("Keyword"),
+            "token"
     );
     assertTrue(actualSearchArticleResult.getData().isEmpty());
     assertNull(actualSearchArticleResult.getSort());
@@ -56,20 +57,20 @@ class ArticleServiceImplTest {
     GeneralDataPaginationResponse.Pagination pagination = actualSearchArticleResult.getPagination();
     assertEquals(2, pagination.getTotalPage());
     assertEquals(2, pagination.getNextPage());
-    verify(articleRepository).findArticleByKeyword(Mockito.<String>any());
+    verify(articleRepository).findArticleByKeyword(Mockito.<String>any(), Mockito.<String>any());
   }
 
   @Test
   void testFindAll() {
-    when(articleRepository.findAllArticles()).thenReturn(new ArrayList<>());
-    GeneralDataPaginationResponse<ArticleResponse> actualFindAllResult = articleServiceImpl.findAll();
+    when(articleRepository.findAllArticles(Mockito.<String>any())).thenReturn(new ArrayList<>());
+    GeneralDataPaginationResponse<ArticleResponse> actualFindAllResult = articleServiceImpl.findAll(Mockito.<String>any());
     assertTrue(actualFindAllResult.getData().isEmpty());
     assertNull(actualFindAllResult.getSort());
     assertNull(actualFindAllResult.getFilter());
     GeneralDataPaginationResponse.Pagination pagination = actualFindAllResult.getPagination();
     assertEquals(2, pagination.getTotalPage());
     assertEquals(2, pagination.getNextPage());
-    verify(articleRepository).findAllArticles();
+    verify(articleRepository).findAllArticles(Mockito.<String>any());
   }
 
   @Test
@@ -108,7 +109,7 @@ class ArticleServiceImplTest {
     request.setBody("this is article test");
     request.setSectionId("42");
     request.setSectionTitle("article_title");
-    assertThrows(ConflictException.class, () -> articleServiceImpl.createArticle(request));
+    assertThrows(ConflictException.class, () -> articleServiceImpl.createArticle(request, "token"));
     verify(articleRepository).findArticleOnDatabase(Mockito.<String>any(), Mockito.<String>any());
     verify(sectionRepository).findSectionIdOnArticleSection(Mockito.<String>any(), Mockito.<String>any());
     verify(sectionRepository).findSectionTitleOnArticleSection(Mockito.<String>any(), Mockito.<String>any());

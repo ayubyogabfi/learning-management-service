@@ -16,23 +16,24 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpec
     "INNER JOIN Section ts ON tas.sectionId = ts.id\n" +
     "WHERE (ta.title LIKE CONCAT('%', :keyword, '%') \n" +
     "OR ts.title LIKE CONCAT('%', :keyword, '%') \n" +
-    "OR ta.body LIKE CONCAT('%', :keyword, '%'))"
+    "OR ta.body LIKE CONCAT('%', :keyword, '%'" +
+    "AND createdBy = :extractedUsername ))"
   )
-  List<ArticleResponse> findArticleByKeyword(@Param("keyword") String keyword);
+  List<ArticleResponse> findArticleByKeyword(@Param("keyword") String keyword, String extractedUsername);
 
   @Query(
     value = "SELECT tas FROM ArticleSection tas\n" +
     "INNER JOIN Article ta ON ta.id = tas.articleId\n" +
     "INNER JOIN Section ts ON tas.sectionId = ts.id\n" +
-    "WHERE ta.createdBy = :userId"
+    "WHERE ta.createdBy = :extractedUsername"
   )
-  List<ArticleResponse> findAllArticles();
+  List<ArticleResponse> findAllArticles(String extractedUsername);
 
   @Query(
     value = "SELECT ta FROM Article INNER JOIN ArticleSection tas " +
     "ON ta.id = tas.article_id WHERE ta.title = :articleTitle " +
     "AND tas.deleted_date IS NULL " +
-    "AND ta.createdBy = :userId "
+    "AND ta.createdBy = :extractedUsername "
   )
-  Optional<Article> findArticleOnDatabase(@Param("articleTitle") String articleTitle, String userId);
+  Optional<Article> findArticleOnDatabase(@Param("articleTitle") String articleTitle, String extractedUsername);
 }

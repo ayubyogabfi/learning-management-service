@@ -4,6 +4,8 @@ import com.example.demo.entity.Section;
 import com.example.demo.repository.SectionRepository;
 import com.example.demo.service.SectionService;
 import java.util.List;
+
+import com.example.demo.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,8 @@ public class SectionServiceImpl implements SectionService {
   }
 
   @Override
-  public List<Section> getAllSections() {
-    return sectionRepository.findAllByOrderByTitleAsc();
+  public List<Section> getAllSections(String token) {
+    String extractedUsername = JwtUtil.getSubject(token);
+    return sectionRepository.findAllByOrderByTitleAscAndUserLogin(extractedUsername);
   }
 }

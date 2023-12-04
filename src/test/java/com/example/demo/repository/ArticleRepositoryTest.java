@@ -23,12 +23,13 @@ class ArticleRepositoryTest {
   @Test
   void findArticleByKeyword_whenKeywordIsValid_ReturnsArticleResponseList() {
     String articleTitle = "sample";
+    String extractedUsername = "user";
     ArticleResponse articleResponse = new ArticleResponse("Section Title", "Sample Article", "Sample Body");
     List<ArticleResponse> expectedResponse = List.of(articleResponse);
 
-    when(articleRepository.findArticleByKeyword(any())).thenReturn(expectedResponse);
+    when(articleRepository.findArticleByKeyword(articleTitle, extractedUsername)).thenReturn(expectedResponse);
 
-    List<ArticleResponse> actualResponse = articleRepository.findArticleByKeyword(articleTitle);
+    List<ArticleResponse> actualResponse = articleRepository.findArticleByKeyword(articleTitle, extractedUsername);
 
     assertEquals(expectedResponse, actualResponse);
   }

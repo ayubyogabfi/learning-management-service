@@ -29,10 +29,11 @@ class SectionServiceImplTest {
   @Test
   void testGetAllSections() {
     ArrayList<Section> sectionList = new ArrayList<>();
-    when(sectionRepository.findAllByOrderByTitleAsc()).thenReturn(sectionList);
-    List<Section> actualAllSections = sectionServiceImpl.getAllSections();
+    String token = "token";
+    when(sectionRepository.findAllByOrderByTitleAscAndUserLogin(token)).thenReturn(sectionList);
+    List<Section> actualAllSections = sectionServiceImpl.getAllSections(token);
     assertSame(sectionList, actualAllSections);
     assertTrue(actualAllSections.isEmpty());
-    verify(sectionRepository).findAllByOrderByTitleAsc();
+    verify(sectionRepository).findAllByOrderByTitleAscAndUserLogin(token);
   }
 }

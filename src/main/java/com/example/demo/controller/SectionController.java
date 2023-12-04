@@ -29,10 +29,11 @@ public class SectionController {
     description = "Get all section list"
   )
   @GetMapping
-  public ResponseEntity<GeneralDataPaginationResponse<SectionResponseData>> getAllSections() {
+  public ResponseEntity<GeneralDataPaginationResponse<SectionResponseData>> getAllSections(String token) {
     SecurityContextHolder.getContext().getAuthentication();
 
-    List<Section> sections = sectionService.getAllSections();
+
+    List<Section> sections = sectionService.getAllSections(token);
 
     List<SectionResponseData> sectionResponseDataList = sections
       .stream()

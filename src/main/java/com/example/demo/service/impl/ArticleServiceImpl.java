@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
+
+import com.example.demo.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +36,10 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   @Override
-  public GeneralDataPaginationResponse<ArticleResponse> searchArticle(SearchArticleRequest request) {
+  public GeneralDataPaginationResponse<ArticleResponse> searchArticle(SearchArticleRequest request, String token) {
+
+    String extractedUsername = JwtUtil.getSubject(token);
+
     if (request.getKeyword() == null || request.getKeyword().trim().length() < 3) {
       return GeneralDataPaginationResponse
         .<ArticleResponse>builder()
@@ -43,7 +48,7 @@ public class ArticleServiceImpl implements ArticleService {
         .build();
     }
 
-    List<ArticleResponse> articles = articleRepository.findArticleByKeyword(request.getKeyword());
+    List<ArticleResponse> articles = articleRepository.findArticleByKeyword(request.getKeyword(), extractedUsername);
 
     return GeneralDataPaginationResponse
       .<ArticleResponse>builder()
@@ -53,8 +58,11 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   @Override
-  public GeneralDataPaginationResponse<ArticleResponse> findAll() {
-    List<ArticleResponse> articles = articleRepository.findAllArticles();
+  public GeneralDataPaginationResponse<ArticleResponse> findAll(String token) {
+
+    String extractedUsername = JwtUtil.getSubject(token);
+
+    List<ArticleResponse> articles = articleRepository.findAllArticles(extractedUsername);
 
     return GeneralDataPaginationResponse
       .<ArticleResponse>builder()
@@ -64,46 +72,47 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   @Override
-  public CreateArticleResponse createArticle(CreateArticleRequest request) {
+  public CreateArticleResponse createArticle(CreateArticleRequest request, String token) {
+    String extractedUsername = JwtUtil.getSubject(token);
     if (!request.getSectionId().isEmpty()) {
-      checkSectionId(request.getSectionId(), request.getUserId());
+      checkSectionId(request.getSectionId(), extractedUsername);
     }
     if (!request.getSectionTitle().isEmpty()) {
-      checkSectionTitle(request.getSectionTitle(), request.getUserId());
+      checkSectionTitle(request.getSectionTitle(), extractedUsername);
     }
 
-    checkArticle(request.getArticleTitle(), request.getUserId()); //check article already on db or not
+    checkArticle(request.getArticleTitle(), extractedUsername); //check article already on db or not
 
     CreateArticleResponse newArticle = new CreateArticleResponse();
     newArticle.setSectionTitle(request.getSectionTitle());
     newArticle.setArticleTitle(request.getArticleTitle());
     newArticle.setBody(request.getBody());
-    newArticle.setCreatedBy(request.getUserId()); // will be developed further
+    newArticle.setCreatedBy(extractedUsername);
     newArticle.setCreatedDate(LocalDateTime.now(ZoneId.systemDefault()));
     newArticle.setCreatedFrom("localhost"); // will be developed further
 
     return createArticleRepository.save(newArticle);
   }
 
-  private void checkArticle(String articleTitle, String userId) {
-    Optional<Article> articleSection = articleRepository.findArticleOnDatabase(articleTitle, userId);
+  private void checkArticle(String articleTitle, String extractedUsername) {
+    Optional<Article> articleSection = articleRepository.findArticleOnDatabase(articleTitle, extractedUsername);
 
     if (articleSection.isPresent()) {
       throw new ConflictException("Article already exist");
     }
   }
 
-  private void checkSectionId(String sectionId, String userId) {
-    Optional<Section> sectionById = sectionRepository.findSectionIdOnArticleSection(sectionId, userId);
+  private void checkSectionId(String sectionId, String extractedUsername) {
+    Optional<Section> sectionById = sectionRepository.findSectionIdOnArticleSection(sectionId, extractedUsername);
     if (sectionById.isEmpty()) {
       throw new BadRequestException("Section not available on Database");
     }
   }
 
-  private void checkSectionTitle(String sectionTitle, String userId) {
-    Optional<Section> sectionByTitle = sectionRepository.findSectionTitleOnArticleSection(sectionTitle, userId);
+  private void checkSectionTitle(String sectionTitle, String extractedUsername) {
+    Optional<Section> sectionByTitle = sectionRepository.findSectionTitleOnArticleSection(sectionTitle, extractedUsername);
     if (sectionByTitle.isEmpty()) {
-      sectionRepository.createSectionBySectionTitle(sectionTitle, userId);
+      sectionRepository.createSectionBySectionTitle(sectionTitle, extractedUsername);
     }
   }
 }

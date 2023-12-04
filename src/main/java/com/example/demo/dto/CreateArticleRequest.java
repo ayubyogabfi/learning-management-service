@@ -26,7 +26,4 @@ public class CreateArticleRequest {
   @NotBlank(message = "Body must not be empty")
   @Size(min = 3, message = "Body must be at least 3 characters long")
   private String body;
-
-  @JsonProperty("user_id")
-  private String userId;
 }

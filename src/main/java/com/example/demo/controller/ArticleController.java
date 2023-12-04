@@ -27,9 +27,10 @@ public class ArticleController {
   )
   @PostMapping(value = "/{article-title}")
   public ResponseEntity<GeneralDataPaginationResponse<ArticleResponse>> searchArticle(
-    @Valid @RequestBody SearchArticleRequest request
+    @Valid @RequestBody SearchArticleRequest request,
+    @RequestBody String token
   ) {
-    GeneralDataPaginationResponse<ArticleResponse> response = articleService.searchArticle(request);
+    GeneralDataPaginationResponse<ArticleResponse> response = articleService.searchArticle(request, token);
 
     return ResponseEntity.ok(response);
   }
@@ -40,8 +41,9 @@ public class ArticleController {
     description = "Create an article"
   )
   @PostMapping("/create")
-  public ResponseEntity<CreateArticleResponse> createArticle(@Valid @RequestBody CreateArticleRequest request) {
-    CreateArticleResponse response = articleService.createArticle(request);
+  public ResponseEntity<CreateArticleResponse> createArticle(@Valid @RequestBody CreateArticleRequest request,
+                                                             @RequestBody String token) {
+    CreateArticleResponse response = articleService.createArticle(request, token);
 
     return ResponseEntity.ok(response);
   }
