@@ -101,8 +101,8 @@ class ArticleServiceImplTest {
     section2.setUpdatedDate(LocalDate.of(2023, 11, 11).atStartOfDay());
     section2.setUpdatedFrom("2022-11-11");
     Optional<Section> ofResult3 = Optional.of(section2);
-    when(sectionRepository.findSectionTitleOnArticleSection(Mockito.<String>any(), Mockito.<String>any())).thenReturn(ofResult3);
-    when(sectionRepository.findSectionIdOnArticleSection(Mockito.<String>any(), Mockito.<String>any())).thenReturn(ofResult2);
+//    when(sectionRepository.findSectionTitleOnArticleSection(Mockito.<String>any(), Mockito.<String>any())).thenReturn(ofResult3);
+//    when(sectionRepository.findSectionIdOnArticleSection(Mockito.<String>any(), Mockito.<String>any())).thenReturn(ofResult2);
 
     CreateArticleRequest request = new CreateArticleRequest();
     request.setArticleTitle("article_title");

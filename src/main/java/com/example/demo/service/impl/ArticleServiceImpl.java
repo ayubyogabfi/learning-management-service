@@ -100,14 +100,14 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   private void checkSectionId(String sectionId, String extractedUsername) {
-    Optional<Section> sectionById = sectionRepository.findSectionIdOnArticleSection(sectionId, extractedUsername);
+    List<Section> sectionById = sectionRepository.findSectionIdOnArticleSection(sectionId, extractedUsername);
     if (sectionById.isEmpty()) {
       throw new BadRequestException("Section not available on Database");
     }
   }
 
   private void checkSectionTitle(String sectionTitle, String extractedUsername) {
-    Optional<Section> sectionByTitle = sectionRepository.findSectionTitleOnArticleSection(
+    List<Section> sectionByTitle = sectionRepository.findSectionTitleOnArticleSection(
       sectionTitle,
       extractedUsername
     );

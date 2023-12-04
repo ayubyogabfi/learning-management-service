@@ -30,9 +30,9 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpec
   List<ArticleResponse> findAllArticles(String extractedUsername);
 
   @Query(
-    value = "SELECT ta FROM Article INNER JOIN ArticleSection tas " +
-    "ON ta.id = tas.article_id WHERE ta.title = :articleTitle " +
-    "AND tas.deleted_date IS NULL " +
+    value = "SELECT ta FROM Article ta INNER JOIN ArticleSection tas " +
+    "ON ta.id = tas.articleId WHERE ta.title = :articleTitle " +
+    "AND tas.deletedDate IS NULL " +
     "AND ta.createdBy = :extractedUsername "
   )
   Optional<Article> findArticleOnDatabase(@Param("articleTitle") String articleTitle, String extractedUsername);
