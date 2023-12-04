@@ -36,7 +36,7 @@ public class SectionController {
 
     List<SectionResponseData> sectionResponseDataList = sections
       .stream()
-      .map(section -> new SectionResponseData(section.getTitle(), section.getBody()))
+      .map(section -> new SectionResponseData(section.getTitle()))
       .collect(Collectors.toList());
 
     GeneralDataPaginationResponse<SectionResponseData> response = GeneralDataPaginationResponse
