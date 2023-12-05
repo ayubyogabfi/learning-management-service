@@ -30,7 +30,4 @@ public class UpdateArticleRequest {
 
   @JsonProperty("user_id")
   private String userId;
-
-  @JsonProperty("deleted_date")
-  private LocalDateTime deletedDate;
 }

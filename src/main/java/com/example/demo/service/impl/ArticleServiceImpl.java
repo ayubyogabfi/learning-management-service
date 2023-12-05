@@ -88,6 +88,7 @@ public class ArticleServiceImpl implements ArticleService {
 
   @Override
   public UpdateArticleResponse updateArticle(UpdateArticleRequest request) {
+
     if (!request.getSectionTitle().isEmpty()) {
       checkSectionTitle(request.getSectionTitle(), request.getUserId());
     }
