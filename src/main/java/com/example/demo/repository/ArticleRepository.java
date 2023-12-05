@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.dto.ArticleResponse;
+import com.example.demo.dto.CreateArticleResponse;
 import com.example.demo.entity.Article;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpecificationExecutor<Article> {
+
   @Query(
     "SELECT tas FROM ArticleSection tas\n" +
     "INNER JOIN Article ta ON ta.id = tas.articleId\n" +

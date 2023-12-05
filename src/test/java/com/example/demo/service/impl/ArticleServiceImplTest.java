@@ -10,12 +10,10 @@ import static org.mockito.Mockito.when;
 import com.example.demo.dto.ArticleResponse;
 import com.example.demo.dto.CreateArticleRequest;
 import com.example.demo.dto.GeneralDataPaginationResponse;
-import com.example.demo.dto.SearchArticleRequest;
 import com.example.demo.entity.Article;
 import com.example.demo.entity.Section;
 import com.example.demo.exceptions.ConflictException;
 import com.example.demo.repository.ArticleRepository;
-import com.example.demo.repository.CreateArticleRepository;
 import com.example.demo.repository.SectionRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -39,25 +37,7 @@ class ArticleServiceImplTest {
   private ArticleServiceImpl articleServiceImpl;
 
   @MockBean
-  private CreateArticleRepository createArticleRepository;
-
-  @MockBean
   private SectionRepository sectionRepository;
-
-//  @Test
-//  void testSearchArticle() {
-//    when(articleRepository.findArticleByKeyword(Mockito.<String>any(), Mockito.<String>any())).thenReturn(new ArrayList<>());
-//    GeneralDataPaginationResponse<ArticleResponse> actualSearchArticleResult = articleServiceImpl.searchArticle(
-//      new SearchArticleRequest("Keyword")
-//    );
-//    assertTrue(actualSearchArticleResult.getData().isEmpty());
-//    assertNull(actualSearchArticleResult.getSort());
-//    assertNull(actualSearchArticleResult.getFilter());
-//    GeneralDataPaginationResponse.Pagination pagination = actualSearchArticleResult.getPagination();
-//    assertEquals(2, pagination.getTotalPage());
-//    assertEquals(2, pagination.getNextPage());
-//    verify(articleRepository).findArticleByKeyword(Mockito.<String>any(), Mockito.<String>any());
-//  }
 
   @Test
   void testFindAll() {

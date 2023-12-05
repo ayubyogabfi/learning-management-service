@@ -6,12 +6,9 @@ import com.example.demo.entity.Section;
 import com.example.demo.exceptions.BadRequestException;
 import com.example.demo.exceptions.ConflictException;
 import com.example.demo.repository.ArticleRepository;
-import com.example.demo.repository.CreateArticleRepository;
 import com.example.demo.repository.SectionRepository;
 import com.example.demo.service.ArticleService;
 import com.example.demo.util.JwtUtil;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +22,6 @@ public class ArticleServiceImpl implements ArticleService {
 
   @Autowired
   private SectionRepository sectionRepository;
-
-  @Autowired
-  private CreateArticleRepository createArticleRepository;
 
   @Autowired
   public ArticleServiceImpl(ArticleRepository articleRepository) {
@@ -74,22 +68,21 @@ public class ArticleServiceImpl implements ArticleService {
     if (!request.getSectionId().isEmpty()) {
       checkSectionId(request.getSectionId(), extractedUsername);
     }
-    if (!request.getSectionTitle().isEmpty()) {
-      checkSectionTitle(request.getSectionTitle(), extractedUsername);
-    }
 
     checkArticle(request.getArticleTitle(), extractedUsername); //check article already on db or not
 
-    CreateArticleResponse newArticle = CreateArticleResponse.builder()
-            .articleTitle(request.getArticleTitle())
+    Article newArticle = Article.builder()
+            .title(request.getArticleTitle())
             .body(request.getBody())
-            .sectionTitle(request.getSectionTitle())
-            .createdBy(extractedUsername)
-            .createdFrom("localhost") // will be developed further
-            .createdDate(LocalDateTime.now(ZoneId.systemDefault()))
             .build();
 
-    return createArticleRepository.save(newArticle);
+    articleRepository.save(newArticle);
+
+     return CreateArticleResponse.builder()
+             .articleTitle(request.getArticleTitle())
+             .sectionTitle(request.getSectionTitle())
+             .body(request.getBody())
+             .build();
   }
 
   private void checkArticle(String articleTitle, String extractedUsername) {
@@ -104,16 +97,6 @@ public class ArticleServiceImpl implements ArticleService {
     List<Section> sectionById = sectionRepository.findSectionIdOnArticleSection(sectionId, extractedUsername);
     if (sectionById.isEmpty()) {
       throw new BadRequestException("Section not available on Database");
-    }
-  }
-
-  private void checkSectionTitle(String sectionTitle, String extractedUsername) {
-    List<Section> sectionByTitle = sectionRepository.findSectionTitleOnArticleSection(
-      sectionTitle,
-      extractedUsername
-    );
-    if (sectionByTitle.isEmpty()) {
-      sectionRepository.createSectionBySectionTitle(sectionTitle, extractedUsername);
     }
   }
 }

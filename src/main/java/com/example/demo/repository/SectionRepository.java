@@ -31,11 +31,4 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
     "AND ts.createdBy = :extractedUsername"
   )
   List<Section> findSectionTitleOnArticleSection(String sectionTitle, String extractedUsername);
-
-  @Modifying
-  @Query(
-    value = "INSERT INTO Section (title, createdBy, createdFrom, createdDate, deletedDate) " +
-            "values (:sectionTitle, :extractedUsername, 'localhost', now(), NULL)"
-  )
-  void createSectionBySectionTitle(String sectionTitle, String extractedUsername);
 }

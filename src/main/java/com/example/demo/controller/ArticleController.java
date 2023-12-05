@@ -36,7 +36,7 @@ public class ArticleController {
   }
 
   @Operation(
-    security = { @SecurityRequirement(name = "bearer-key") },
+//    security = { @SecurityRequirement(name = "bearer-key") },
     summary = "Create an article",
     description = "Create an article"
   )
