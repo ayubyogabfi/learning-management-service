@@ -14,6 +14,7 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -92,7 +93,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     checkArticle(request.getArticleTitle(), request.getUserId());
-    UpdateArticleResponse newArticle =  UpdateArticleResponse
+    UpdateArticleResponse
             .builder()
             .articleTitle(request.getArticleTitle())
             .sectionTitle(request.getSectionTitle())
@@ -102,7 +103,11 @@ public class ArticleServiceImpl implements ArticleService {
             .updatedFrom("localhost")
             .build();
 
-    return articleRepository.updateArticle(request);
+    return articleRepository.updateArticle(
+            request.getArticleTitle(),
+            request.getSectionTitle(),
+            request.getBody()
+    );
   }
 
   private void checkArticle(String articleTitle, String userId) {

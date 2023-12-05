@@ -40,7 +40,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpec
   @Query(
           value = "SELECT"
   )
-  Optional<UpdateArticleResponse> updateArticle(
+  UpdateArticleResponse updateArticle(
           @Param("articleTitle") String articleTitle,
           @Param("sectionTitle") String sectionTitle,
           @Param("body") String body
