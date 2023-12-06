@@ -9,6 +9,7 @@ import org.hibernate.Hibernate;
 @Entity(name = "users")
 @Getter
 @Setter
+@Builder
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,10 +27,10 @@ public class User extends BaseEntity {
   private String email;
 
   @Column(unique = true, name = "username")
+  @JsonProperty("username")
   private String username;
 
   @Column(nullable = false, name = "password")
-  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
 
   @Column(name = "roles")
@@ -47,4 +48,7 @@ public class User extends BaseEntity {
   public int hashCode() {
     return 0;
   }
+
+  @JsonProperty("access_token")
+  private String accessToken;
 }

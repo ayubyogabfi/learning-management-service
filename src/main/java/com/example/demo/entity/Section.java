@@ -18,5 +18,4 @@ public class Section extends BaseEntity {
 
   @Column(nullable = false)
   private String title;
-
 }

@@ -3,7 +3,6 @@ package com.example.demo.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
-
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 

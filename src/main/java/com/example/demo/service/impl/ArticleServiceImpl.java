@@ -8,7 +8,6 @@ import com.example.demo.exceptions.ConflictException;
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.repository.SectionRepository;
 import com.example.demo.service.ArticleService;
-import com.example.demo.util.JwtUtil;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +22,11 @@ public class ArticleServiceImpl implements ArticleService {
   @Autowired
   private SectionRepository sectionRepository;
 
-  @Autowired
-  public ArticleServiceImpl(ArticleRepository articleRepository) {
-    this.articleRepository = articleRepository;
-  }
-
   @Override
-  public GeneralDataPaginationResponse<ArticleResponse> searchArticle(SearchArticleRequest request) {
-    String extractedUsername = JwtUtil.getSubject(request.getToken());
-
+  public GeneralDataPaginationResponse<ArticleResponse> searchArticle(
+    SearchArticleRequest request,
+    String extractedUsername
+  ) {
     if (request.getKeyword() == null || request.getKeyword().trim().length() < 3) {
       return GeneralDataPaginationResponse
         .<ArticleResponse>builder()
@@ -50,10 +45,8 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   @Override
-  public GeneralDataPaginationResponse<ArticleResponse> findAll(String token) {
-    String extractedUsername = JwtUtil.getSubject(token);
-
-    List<ArticleResponse> articles = articleRepository.findAllArticles(extractedUsername);
+  public GeneralDataPaginationResponse<ArticleResponse> findAll(String extractedUsername) {
+    List<ArticleResponse> articles = articleRepository.findAllArticlesByUserLogin(extractedUsername);
 
     return GeneralDataPaginationResponse
       .<ArticleResponse>builder()
@@ -63,26 +56,23 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   @Override
-  public CreateArticleResponse createArticle(CreateArticleRequest request) {
-    String extractedUsername = JwtUtil.getSubject(request.getToken()); // get username from token
+  public CreateArticleResponse createArticle(CreateArticleRequest request, String extractedUsername) {
     if (!request.getSectionId().isEmpty()) {
       checkSectionId(request.getSectionId(), extractedUsername);
     }
 
     checkArticle(request.getArticleTitle(), extractedUsername); //check article already on db or not
 
-    Article newArticle = Article.builder()
-            .title(request.getArticleTitle())
-            .body(request.getBody())
-            .build();
+    Article newArticle = Article.builder().title(request.getArticleTitle()).body(request.getBody()).build();
 
     articleRepository.save(newArticle);
 
-     return CreateArticleResponse.builder()
-             .articleTitle(request.getArticleTitle())
-             .sectionTitle(request.getSectionTitle())
-             .body(request.getBody())
-             .build();
+    return CreateArticleResponse
+      .builder()
+      .articleTitle(request.getArticleTitle())
+      .sectionTitle(request.getSectionTitle())
+      .body(request.getBody())
+      .build();
   }
 
   private void checkArticle(String articleTitle, String extractedUsername) {
