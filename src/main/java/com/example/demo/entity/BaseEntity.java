@@ -1,13 +1,10 @@
 package com.example.demo.entity;
 
 import java.time.LocalDateTime;
-import javax.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 import org.hibernate.annotations.CreationTimestamp;
 
-@Getter
-@Setter
 @MappedSuperclass
 public class BaseEntity {
 

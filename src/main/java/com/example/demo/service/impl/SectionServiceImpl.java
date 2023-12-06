@@ -15,6 +15,6 @@ public class SectionServiceImpl implements SectionService {
 
   @Override
   public List<Section> getAllSections(String extractedUsername) {
-    return sectionRepository.findAllByOrderByTitleAscAndUserLogin(extractedUsername);
+    return sectionRepository.findAllByTitleOrderAscAndUserLogin(extractedUsername);
   }
 }

@@ -7,9 +7,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 @Entity(name = "users")
-@Getter
-@Setter
-@Builder
+@Data
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor

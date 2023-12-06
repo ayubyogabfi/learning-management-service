@@ -30,10 +30,10 @@
 //  void testGetAllSections() {
 //    ArrayList<Section> sectionList = new ArrayList<>();
 //    String token = "token";
-//    when(sectionRepository.findAllByOrderByTitleAscAndUserLogin(token)).thenReturn(sectionList);
+//    when(sectionRepository.findAllByTitleOrderAscAndUserLogin(token)).thenReturn(sectionList);
 //    List<Section> actualAllSections = sectionServiceImpl.getAllSections(token);
 //    assertSame(sectionList, actualAllSections);
 //    assertTrue(actualAllSections.isEmpty());
-//    verify(sectionRepository).findAllByOrderByTitleAscAndUserLogin(token);
+//    verify(sectionRepository).findAllByTitleOrderAscAndUserLogin(token);
 //  }
 //}

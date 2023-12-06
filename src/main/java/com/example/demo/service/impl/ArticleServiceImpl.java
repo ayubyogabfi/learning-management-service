@@ -2,15 +2,18 @@ package com.example.demo.service.impl;
 
 import com.example.demo.dto.*;
 import com.example.demo.entity.Article;
+import com.example.demo.entity.ArticleSection;
 import com.example.demo.entity.Section;
 import com.example.demo.exceptions.BadRequestException;
 import com.example.demo.exceptions.ConflictException;
 import com.example.demo.repository.ArticleRepository;
+import com.example.demo.repository.ArticleSectionRepository;
 import com.example.demo.repository.SectionRepository;
 import com.example.demo.service.ArticleService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,20 +25,20 @@ public class ArticleServiceImpl implements ArticleService {
   @Autowired
   private SectionRepository sectionRepository;
 
+  @Autowired
+  private ArticleSectionRepository articleSectionRepository;
+
   @Override
   public GeneralDataPaginationResponse<ArticleResponse> searchArticle(
     SearchArticleRequest request,
     String extractedUsername
   ) {
-    if (request.getKeyword() == null || request.getKeyword().trim().length() < 3) {
-      return GeneralDataPaginationResponse
-        .<ArticleResponse>builder()
-        .pagination(new GeneralDataPaginationResponse.Pagination(0, 0))
-        .data(null)
-        .build();
-    }
+    SearchArticleRequest searchArticleRequest = SearchArticleRequest.builder().build();
 
-    List<ArticleResponse> articles = articleRepository.findArticleByKeyword(request.getKeyword(), extractedUsername);
+    List<ArticleResponse> articles = articleRepository.findArticleByKeyword(
+      searchArticleRequest.toString(),
+      extractedUsername
+    );
 
     return GeneralDataPaginationResponse
       .<ArticleResponse>builder()
@@ -59,6 +62,10 @@ public class ArticleServiceImpl implements ArticleService {
   public CreateArticleResponse createArticle(CreateArticleRequest request, String extractedUsername) {
     if (!request.getSectionId().isEmpty()) {
       checkSectionId(request.getSectionId(), extractedUsername);
+    }
+
+    if (!request.getSectionTitle().isEmpty()) {
+      checkSectionTitle(request.getArticleTitle(), request.getArticleTitle(), extractedUsername);
     }
 
     checkArticle(request.getArticleTitle(), extractedUsername); //check article already on db or not
@@ -87,6 +94,30 @@ public class ArticleServiceImpl implements ArticleService {
     List<Section> sectionById = sectionRepository.findSectionIdOnArticleSection(sectionId, extractedUsername);
     if (sectionById.isEmpty()) {
       throw new BadRequestException("Section not available on Database");
+    }
+  }
+
+  private void checkSectionTitle(String sectionTitle, String extractedUsername, String articleTitle) {
+    List<Section> sectionByTitle = sectionRepository.findSectionBySectionTitleAndUserLogin(
+      sectionTitle,
+      extractedUsername
+    );
+    if (sectionByTitle.isEmpty()) {
+      Section section = Section.builder().title(sectionTitle).build();
+      sectionRepository.save(section);
+
+      Optional<Article> articles = articleRepository.findArticleOnDatabase(articleTitle, extractedUsername);
+      assert articles.orElse(null) != null;
+      Long articleId = articles.orElse(null).getId();
+
+      Optional<Section> sections = sectionRepository.findSectionOnDatabase(sectionTitle, extractedUsername);
+      assert sections.orElse(null) != null;
+      Long sectionId = sections.orElse(null).getId();
+
+      ArticleSection articleSection = ArticleSection.builder().articleId(articleId).sectionId(sectionId).build();
+      articleSectionRepository.save(articleSection);
+    } else {
+      throw new BadRequestException("Bad Request");
     }
   }
 }
