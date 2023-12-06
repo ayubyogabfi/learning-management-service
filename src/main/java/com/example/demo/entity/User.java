@@ -48,6 +48,6 @@ public class User extends BaseEntity {
   public int hashCode() {
     return 0;
   }
-  
+
   private String accessToken;
 }
