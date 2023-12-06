@@ -48,7 +48,4 @@ public class User extends BaseEntity {
   public int hashCode() {
     return 0;
   }
-
-  @JsonProperty("access_token")
-  private String accessToken;
 }
