@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.constants.AppConstants;
 import com.example.demo.dto.*;
 import com.example.demo.entity.Article;
 import com.example.demo.entity.ArticleSection;
@@ -10,6 +11,8 @@ import com.example.demo.repository.ArticleRepository;
 import com.example.demo.repository.ArticleSectionRepository;
 import com.example.demo.repository.SectionRepository;
 import com.example.demo.service.ArticleService;
+
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +80,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     // build new article
     Article newArticle = Article.builder().title(request.getArticleTitle()).body(request.getBody()).build();
+    newArticle.setCreatedBy(extractedUsername);
+    newArticle.setCreatedFrom(extractedUsername);
+    newArticle.setCreatedDate(ZonedDateTime.now(AppConstants.ZONE_ID));
 
     articleRepository.save(newArticle);
 
@@ -86,7 +92,15 @@ public class ArticleServiceImpl implements ArticleService {
     Long articleIdFromDb = articles.orElse(null).getId();
 
     // save article to article section db
-    ArticleSection articleSection = ArticleSection.builder().articleId(articleIdFromDb).sectionId(sectionId).build();
+    ArticleSection articleSection = ArticleSection.builder()
+            .articleId(articleIdFromDb)
+            .sectionId(sectionId)
+            .build();
+
+    articleSection.setCreatedBy(extractedUsername);
+    articleSection.setCreatedFrom(extractedUsername);
+    articleSection.setCreatedDate(ZonedDateTime.now(AppConstants.ZONE_ID));
+
     articleSectionRepository.save(articleSection);
 
     // return response on creating article
@@ -123,6 +137,9 @@ public class ArticleServiceImpl implements ArticleService {
     Long sectionId;
     if (sectionByTitle.isEmpty()) {
       Section createSection = Section.builder().title(sectionTitle).build();
+      createSection.setCreatedBy(extractedUsername);
+      createSection.setCreatedFrom(extractedUsername);
+      createSection.setCreatedDate(ZonedDateTime.now(AppConstants.ZONE_ID));
       sectionRepository.save(createSection);
 
       Optional<Section> sections = sectionRepository.findSection(sectionTitle, extractedUsername);
