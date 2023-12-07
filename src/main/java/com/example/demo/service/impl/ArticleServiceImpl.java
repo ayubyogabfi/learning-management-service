@@ -13,7 +13,6 @@ import com.example.demo.service.ArticleService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -60,12 +59,16 @@ public class ArticleServiceImpl implements ArticleService {
 
   @Override
   public CreateArticleResponse createArticle(CreateArticleRequest request, String extractedUsername) {
-    if (!request.getSectionId().isEmpty()) {
-      checkSectionId(request.getSectionId(), extractedUsername);
-    }
+    String sectionId = request.getSectionId();
+    String sectionTitle = request.getSectionTitle();
+    String articleTitle = request.getArticleTitle();
 
-    if (!request.getSectionTitle().isEmpty()) {
-      checkSectionTitle(request.getArticleTitle(), request.getArticleTitle(), extractedUsername);
+    if (sectionId != null && (sectionTitle == null || !sectionTitle.isEmpty())) {
+      checkSectionId(sectionId, extractedUsername);
+    } else if (sectionId == null && sectionTitle != null && !sectionTitle.isEmpty()) {
+      checkSectionTitle(sectionTitle, extractedUsername, articleTitle);
+    } else if (sectionId == null && sectionTitle == null) {
+      throw new BadRequestException("Please Input valid Section Id or Section Title");
     }
 
     checkArticle(request.getArticleTitle(), extractedUsername); //check article already on db or not
