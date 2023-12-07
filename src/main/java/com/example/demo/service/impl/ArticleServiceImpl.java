@@ -87,13 +87,12 @@ public class ArticleServiceImpl implements ArticleService {
     articleRepository.save(newArticle);
 
     // check article id
-    Optional<Article> articles = articleRepository.findArticle(articleTitle, extractedUsername);
-    assert articles.orElse(null) != null;
-    Long articleIdFromDb = articles.orElse(null).getId();
+    Article articles = articleRepository.findArticle(articleTitle, extractedUsername);
+    Long articleId = articles.getId();
 
     // save article to article section db
     ArticleSection articleSection = ArticleSection.builder()
-            .articleId(articleIdFromDb)
+            .articleId(articleId)
             .sectionId(sectionId)
             .build();
 

@@ -42,5 +42,5 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpec
     "AND ta.deletedDate IS NULL " +
     "AND ta.createdBy = :extractedUsername "
   )
-  Optional<Article> findArticle(@Param("articleTitle") String articleTitle, String extractedUsername);
+  Article findArticle(@Param("articleTitle") String articleTitle, String extractedUsername);
 }
