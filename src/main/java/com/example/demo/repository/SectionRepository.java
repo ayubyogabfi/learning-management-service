@@ -18,7 +18,7 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
     "AND tas.deletedDate IS NULL \n " +
     "AND ts.createdBy = :extractedUsername"
   )
-  List<Section> findSectionIdOnArticleSection(String sectionId, String extractedUsername);
+  List<Section> findSectionIdOnArticleSection(Long sectionId, String extractedUsername);
 
   @Query(
     value = "SELECT ts from Section ts INNER JOIN ArticleSection tas \n" +

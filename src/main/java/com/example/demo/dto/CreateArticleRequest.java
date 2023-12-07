@@ -21,7 +21,7 @@ public class CreateArticleRequest {
 
   // Optional: Either section ID or section Title
   @JsonProperty("section_id")
-  private String sectionId;
+  private Long sectionId;
 
   @JsonProperty("section_title")
   private String sectionTitle;

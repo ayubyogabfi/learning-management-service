@@ -59,7 +59,7 @@ public class ArticleServiceImpl implements ArticleService {
 
   @Override
   public CreateArticleResponse createArticle(CreateArticleRequest request, String extractedUsername) {
-    String sectionId = request.getSectionId();
+    Long sectionId = request.getSectionId();
     String sectionTitle = request.getSectionTitle();
     String articleTitle = request.getArticleTitle();
 
@@ -67,7 +67,7 @@ public class ArticleServiceImpl implements ArticleService {
     if (sectionId != null && (sectionTitle == null || !sectionTitle.isEmpty())) {
       checkSectionId(sectionId, extractedUsername);
     } else if (sectionId == null && sectionTitle != null && !sectionTitle.isEmpty()) {
-      checkSectionTitle(sectionTitle, extractedUsername);
+      sectionId = checkSectionTitle(sectionTitle, extractedUsername);
     } else if (sectionId == null && sectionTitle == null) {
       throw new BadRequestException("Please Input valid Section Id or Section Title");
     }
@@ -85,17 +85,8 @@ public class ArticleServiceImpl implements ArticleService {
     assert articles.orElse(null) != null;
     Long articleIdFromDb = articles.orElse(null).getId();
 
-    // check section title
-    Optional<Section> sections = sectionRepository.findSection(sectionTitle, extractedUsername);
-    assert sections.orElse(null) != null;
-    Long sectionIdFromDb = sections.orElse(null).getId();
-
     // save article to article section db
-    ArticleSection articleSection = ArticleSection
-      .builder()
-      .articleId(articleIdFromDb)
-      .sectionId(sectionIdFromDb)
-      .build();
+    ArticleSection articleSection = ArticleSection.builder().articleId(articleIdFromDb).sectionId(sectionId).build();
     articleSectionRepository.save(articleSection);
 
     // return response on creating article
@@ -115,7 +106,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
   }
 
-  private void checkSectionId(String sectionId, String extractedUsername) {
+  private void checkSectionId(Long sectionId, String extractedUsername) {
     List<Section> sectionById = sectionRepository.findSectionIdOnArticleSection(sectionId, extractedUsername);
     // check section by id already on db or not
     if (sectionById.isEmpty()) {
@@ -123,15 +114,23 @@ public class ArticleServiceImpl implements ArticleService {
     }
   }
 
-  private void checkSectionTitle(String sectionTitle, String extractedUsername) {
+  private Long checkSectionTitle(String sectionTitle, String extractedUsername) {
     List<Section> sectionByTitle = sectionRepository.findSectionBySectionTitleAndUserLogin(
       sectionTitle,
       extractedUsername
     );
     // check section title already on db or not, if not, create section by title
+    Long sectionId;
     if (sectionByTitle.isEmpty()) {
       Section createSection = Section.builder().title(sectionTitle).build();
       sectionRepository.save(createSection);
+
+      Optional<Section> sections = sectionRepository.findSection(sectionTitle, extractedUsername);
+      assert sections.orElse(null) != null;
+      sectionId = sections.orElse(null).getId();
+    } else {
+      sectionId = sectionByTitle.get(0).getId(); // Assuming the list has only one element
     }
+    return sectionId;
   }
 }
