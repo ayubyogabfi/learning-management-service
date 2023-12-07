@@ -1,13 +1,17 @@
 package com.example.demo.entity;
 
 import javax.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
-@Setter
+@Data
+@Builder
 @Table(name = "td_article_section")
+@NoArgsConstructor
+@AllArgsConstructor
 public class ArticleSection extends BaseEntity {
 
   @Id
@@ -16,10 +20,10 @@ public class ArticleSection extends BaseEntity {
   public Long id;
 
   @Column(name = "section_id")
-  public String sectionId;
+  public Long sectionId;
 
   @Column(name = "article_id")
-  public String articleId;
+  public Long articleId;
 
   @Column(name = "body")
   public String body;

@@ -1,12 +1,11 @@
 package com.example.demo.controller;
 
+import com.example.demo.auth.JwtService;
 import com.example.demo.dto.ErrorResponse;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.LoginResponse;
 import com.example.demo.entity.User;
-import com.example.demo.entity.UserDetails;
 import com.example.demo.service.UserService;
-import com.example.demo.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,7 +15,11 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,10 +31,15 @@ public class AuthController {
 
   private final UserService userService;
 
-  @Autowired
   public AuthController(UserService userService) {
     this.userService = userService;
   }
+
+  @Autowired
+  private JwtService jwtService;
+
+  @Autowired
+  private AuthenticationManager authenticationManager;
 
   @PostMapping("/v1/login")
   @Operation(summary = "User Login")
@@ -48,18 +56,19 @@ public class AuthController {
   )
   public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
     try {
-      boolean user = userService.validateUserCredentials(loginRequest);
-
-      if (!user) {
+      if (!userService.checkPassword(loginRequest)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
       }
-      String accessToken = JwtUtil.createToken(
-        new UserDetails(loginRequest.getUsername(), loginRequest.getPassword(), null)
-      );
+
+      String accessToken = jwtService.generateToken(loginRequest.getUsername());
+
+      User responses = new User();
+      responses.setUsername(loginRequest.getUsername());
+      responses.setAccessToken(accessToken);
 
       LoginResponse response = new LoginResponse();
-      response.setUsername(loginRequest.getUsername());
-      response.setAccessToken(accessToken);
+      response.setUsername(responses.getUsername());
+      response.setAccessToken(responses.getAccessToken());
 
       return ResponseEntity.ok(response);
     } catch (BadCredentialsException e) {

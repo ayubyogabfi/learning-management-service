@@ -12,7 +12,4 @@ public class SectionResponseData {
 
   @JsonProperty(value = "section_title")
   public String sectionTitle;
-
-  @JsonProperty(value = "body")
-  public String body;
 }

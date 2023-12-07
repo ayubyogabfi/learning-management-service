@@ -9,6 +9,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateArticleRequest {
 
   @NotBlank(message = "Article title must not be empty")
@@ -18,7 +21,7 @@ public class CreateArticleRequest {
 
   // Optional: Either section ID or section Title
   @JsonProperty("section_id")
-  private String sectionId;
+  private Long sectionId;
 
   @JsonProperty("section_title")
   private String sectionTitle;
@@ -26,7 +29,4 @@ public class CreateArticleRequest {
   @NotBlank(message = "Body must not be empty")
   @Size(min = 3, message = "Body must be at least 3 characters long")
   private String body;
-
-  @JsonProperty("user_id")
-  private String userId;
 }

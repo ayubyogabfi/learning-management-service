@@ -4,8 +4,7 @@ import javax.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,8 +16,5 @@ public class Section extends BaseEntity {
   private Long id;
 
   @Column(nullable = false)
-  private String title;
-
-  @Column(columnDefinition = "TEXT")
-  private String body;
+  public String title;
 }

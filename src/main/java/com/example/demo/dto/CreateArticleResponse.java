@@ -1,15 +1,11 @@
 package com.example.demo.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import javax.persistence.Column;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,7 +22,7 @@ public class CreateArticleResponse {
 
   @CreationTimestamp
   @Column(name = "created_date", updatable = false, nullable = false)
-  protected LocalDateTime createdDate;
+  protected ZonedDateTime createdDate;
 
   @Column(name = "created_by")
   private String createdBy;
