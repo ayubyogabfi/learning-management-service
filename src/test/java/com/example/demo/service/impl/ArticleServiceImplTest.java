@@ -63,7 +63,7 @@
 //    article.setUpdatedDate(LocalDate.of(2023, 11, 11).atStartOfDay());
 //    article.setUpdatedFrom("2022-11-11");
 //    Optional<Article> ofResult = Optional.of(article);
-//    when(articleRepository.findArticleOnDatabase(Mockito.<String>any(), Mockito.<String>any())).thenReturn(ofResult);
+//    when(articleRepository.findArticle(Mockito.<String>any(), Mockito.<String>any())).thenReturn(ofResult);
 //
 //    Section section = getSection();
 //    Optional<Section> ofResult2 = Optional.of(section);
@@ -88,7 +88,7 @@
 //    request.setSectionId("42");
 //    request.setSectionTitle("article_title");
 //    assertThrows(ConflictException.class, () -> articleServiceImpl.createArticle(request));
-//    verify(articleRepository).findArticleOnDatabase(Mockito.<String>any(), Mockito.<String>any());
+//    verify(articleRepository).findArticle(Mockito.<String>any(), Mockito.<String>any());
 //    verify(sectionRepository).findSectionIdOnArticleSection(Mockito.<String>any(), Mockito.<String>any());
 //    verify(sectionRepository).findSectionTitleOnArticleSection(Mockito.<String>any(), Mockito.<String>any());
 //  }

@@ -63,20 +63,42 @@ public class ArticleServiceImpl implements ArticleService {
     String sectionTitle = request.getSectionTitle();
     String articleTitle = request.getArticleTitle();
 
+    // check article created by section id or section title
     if (sectionId != null && (sectionTitle == null || !sectionTitle.isEmpty())) {
       checkSectionId(sectionId, extractedUsername);
     } else if (sectionId == null && sectionTitle != null && !sectionTitle.isEmpty()) {
-      checkSectionTitle(sectionTitle, extractedUsername, articleTitle);
+      checkSectionTitle(sectionTitle, extractedUsername);
     } else if (sectionId == null && sectionTitle == null) {
       throw new BadRequestException("Please Input valid Section Id or Section Title");
     }
 
+    //check article already on db or not
     checkArticle(request.getArticleTitle(), extractedUsername); //check article already on db or not
 
+    // build new article
     Article newArticle = Article.builder().title(request.getArticleTitle()).body(request.getBody()).build();
 
     articleRepository.save(newArticle);
 
+    // check article id
+    Optional<Article> articles = articleRepository.findArticle(articleTitle, extractedUsername);
+    assert articles.orElse(null) != null;
+    Long articleIdFromDb = articles.orElse(null).getId();
+
+    // check section title
+    Optional<Section> sections = sectionRepository.findSection(sectionTitle, extractedUsername);
+    assert sections.orElse(null) != null;
+    Long sectionIdFromDb = sections.orElse(null).getId();
+
+    // save article to article section db
+    ArticleSection articleSection = ArticleSection
+      .builder()
+      .articleId(articleIdFromDb)
+      .sectionId(sectionIdFromDb)
+      .build();
+    articleSectionRepository.save(articleSection);
+
+    // return response on creating article
     return CreateArticleResponse
       .builder()
       .articleTitle(request.getArticleTitle())
@@ -86,8 +108,8 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   private void checkArticle(String articleTitle, String extractedUsername) {
-    Optional<Article> articleSection = articleRepository.findArticleOnDatabase(articleTitle, extractedUsername);
-
+    Optional<Article> articleSection = articleRepository.findArticleOnArticleSection(articleTitle, extractedUsername);
+    // check article already on db or not
     if (articleSection.isPresent()) {
       throw new ConflictException("Article already exist");
     }
@@ -95,32 +117,21 @@ public class ArticleServiceImpl implements ArticleService {
 
   private void checkSectionId(String sectionId, String extractedUsername) {
     List<Section> sectionById = sectionRepository.findSectionIdOnArticleSection(sectionId, extractedUsername);
+    // check section by id already on db or not
     if (sectionById.isEmpty()) {
       throw new BadRequestException("Section not available on Database");
     }
   }
 
-  private void checkSectionTitle(String sectionTitle, String extractedUsername, String articleTitle) {
+  private void checkSectionTitle(String sectionTitle, String extractedUsername) {
     List<Section> sectionByTitle = sectionRepository.findSectionBySectionTitleAndUserLogin(
       sectionTitle,
       extractedUsername
     );
+    // check section title already on db or not, if not, create section by title
     if (sectionByTitle.isEmpty()) {
-      Section section = Section.builder().title(sectionTitle).build();
-      sectionRepository.save(section);
-
-      Optional<Article> articles = articleRepository.findArticleOnDatabase(articleTitle, extractedUsername);
-      assert articles.orElse(null) != null;
-      Long articleId = articles.orElse(null).getId();
-
-      Optional<Section> sections = sectionRepository.findSectionOnDatabase(sectionTitle, extractedUsername);
-      assert sections.orElse(null) != null;
-      Long sectionId = sections.orElse(null).getId();
-
-      ArticleSection articleSection = ArticleSection.builder().articleId(articleId).sectionId(sectionId).build();
-      articleSectionRepository.save(articleSection);
-    } else {
-      throw new BadRequestException("Bad Request");
+      Section createSection = Section.builder().title(sectionTitle).build();
+      sectionRepository.save(createSection);
     }
   }
 }

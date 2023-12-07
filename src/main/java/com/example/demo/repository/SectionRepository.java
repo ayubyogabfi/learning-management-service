@@ -39,5 +39,5 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
     "AND ts.deletedDate IS NULL " +
     "AND ts.createdBy = :extractedUsername "
   )
-  Optional<Section> findSectionOnDatabase(String sectionTitle, String extractedUsername);
+  Optional<Section> findSection(String sectionTitle, String extractedUsername);
 }
