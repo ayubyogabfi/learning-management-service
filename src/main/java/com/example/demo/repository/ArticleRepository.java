@@ -1,7 +1,6 @@
 package com.example.demo.repository;
 
 import com.example.demo.dto.ArticleResponse;
-import com.example.demo.dto.UpdateArticleResponse;
 import com.example.demo.entity.Article;
 import java.util.List;
 import java.util.Optional;
@@ -17,34 +16,31 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpec
     "INNER JOIN Section ts ON tas.sectionId = ts.id\n" +
     "WHERE (ta.title LIKE CONCAT('%', :keyword, '%') \n" +
     "OR ts.title LIKE CONCAT('%', :keyword, '%') \n" +
-    "OR ta.body LIKE CONCAT('%', :keyword, '%'))"
+    "OR ta.body LIKE CONCAT('%', :keyword, '%'" +
+    "AND createdBy = :extractedUsername ))"
   )
-  List<ArticleResponse> findArticleByKeyword(@Param("keyword") String keyword);
+  List<ArticleResponse> findArticleByKeyword(@Param("keyword") String keyword, String extractedUsername);
 
   @Query(
     value = "SELECT tas FROM ArticleSection tas\n" +
     "INNER JOIN Article ta ON ta.id = tas.articleId\n" +
     "INNER JOIN Section ts ON tas.sectionId = ts.id\n" +
-    "WHERE ta.createdBy = :userId"
+    "WHERE ta.createdBy = :extractedUsername"
   )
-  List<ArticleResponse> findAllArticles();
+  List<ArticleResponse> findAllArticlesByUserLogin(String extractedUsername);
 
   @Query(
-    value = "SELECT ta FROM Article INNER JOIN ArticleSection tas " +
-    "ON ta.id = tas.article_id WHERE ta.title = :articleTitle " +
-    "AND tas.deleted_date IS NULL " +
-    "AND ta.createdBy = :userId "
+    value = "SELECT ta FROM Article ta INNER JOIN ArticleSection tas " +
+    "ON ta.id = tas.articleId WHERE ta.title = :articleTitle " +
+    "AND tas.deletedDate IS NULL " +
+    "AND ta.createdBy = :extractedUsername "
   )
-  Optional<Article> findArticleOnDatabase(@Param("articleTitle") String articleTitle, String userId);
+  Optional<Article> findArticleOnArticleSection(@Param("articleTitle") String articleTitle, String extractedUsername);
 
   @Query(
-          value = "SELECT"
+    value = "SELECT ta FROM Article ta WHERE ta.title = :articleTitle " +
+    "AND ta.deletedDate IS NULL " +
+    "AND ta.createdBy = :extractedUsername "
   )
-  UpdateArticleResponse updateArticle(
-          @Param("articleTitle") String articleTitle,
-          @Param("sectionTitle") String sectionTitle,
-          @Param("body") String body
-  );
-
-
+  Article findArticle(@Param("articleTitle") String articleTitle, String extractedUsername);
 }

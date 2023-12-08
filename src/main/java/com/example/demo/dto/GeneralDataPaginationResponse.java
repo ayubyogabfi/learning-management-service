@@ -5,9 +5,8 @@ import java.util.List;
 import lombok.*;
 import org.springframework.data.domain.Pageable;
 
-@Getter
-@Setter
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class GeneralDataPaginationResponse<T> {
@@ -27,6 +26,7 @@ public class GeneralDataPaginationResponse<T> {
     var pagination = new Pagination();
     pagination.setNextPage(nextPage);
     pagination.setTotalPage(totalPages);
+
     this.setPagination(pagination);
 
     this.setFilter(filter);
@@ -49,8 +49,7 @@ public class GeneralDataPaginationResponse<T> {
   @Builder
   @NoArgsConstructor
   @AllArgsConstructor
-  @Setter
-  @Getter
+  @Data
   public static class Pagination {
 
     @JsonProperty("total_page")
@@ -63,8 +62,7 @@ public class GeneralDataPaginationResponse<T> {
   @Builder
   @NoArgsConstructor
   @AllArgsConstructor
-  @Setter
-  @Getter
+  @Data
   public static class Filter {
 
     @JsonProperty("section_title")
@@ -74,8 +72,7 @@ public class GeneralDataPaginationResponse<T> {
   @Builder
   @NoArgsConstructor
   @AllArgsConstructor
-  @Setter
-  @Getter
+  @Data
   public static class Sort {
 
     @JsonProperty("order")

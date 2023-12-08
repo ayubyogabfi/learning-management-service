@@ -13,13 +13,8 @@ public class SectionServiceImpl implements SectionService {
   @Autowired
   private SectionRepository sectionRepository;
 
-  @Autowired
-  public SectionServiceImpl(SectionRepository sectionRepository) {
-    this.sectionRepository = sectionRepository;
-  }
-
   @Override
-  public List<Section> getAllSections() {
-    return sectionRepository.findAllByOrderByTitleAsc();
+  public List<Section> getAllSections(String extractedUsername) {
+    return sectionRepository.findAllByTitleOrderAscAndUserLogin(extractedUsername);
   }
 }

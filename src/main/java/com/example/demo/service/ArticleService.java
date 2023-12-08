@@ -1,15 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.*;
-import com.example.demo.entity.Article;
 
 public interface ArticleService {
-  GeneralDataPaginationResponse<ArticleResponse> searchArticle(SearchArticleRequest request);
+  GeneralDataPaginationResponse<ArticleResponse> searchArticle(SearchArticleRequest request, String extractedUsername);
 
-  GeneralDataPaginationResponse<ArticleResponse> findAll();
+  GeneralDataPaginationResponse<ArticleResponse> findAll(String extractedUsername);
 
-  CreateArticleResponse createArticle(CreateArticleRequest request);
-
-  UpdateArticleResponse updateArticle(UpdateArticleRequest request);
-
+  CreateArticleResponse createArticle(CreateArticleRequest request, String extractedUsername);
 }

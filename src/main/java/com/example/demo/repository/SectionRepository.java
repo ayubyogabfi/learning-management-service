@@ -4,35 +4,40 @@ import com.example.demo.entity.Section;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SectionRepository extends JpaRepository<Section, Long> {
-  List<Section> findAllByOrderByTitleAsc();
+  @Query(value = "SELECT ts from Section ts WHERE createdBy = :extractedUsername " + "ORDER BY ts.title ASC")
+  List<Section> findAllByTitleOrderAscAndUserLogin(String extractedUsername);
 
   @Query(
-    value = "SELECT ts from Section INNER JOIN ArticleSection tas \n" +
-    "ON ts.id = tas.section_id WHERE :sectionId = ts.id" +
-    "AND tas.deleted_date = null " +
-    "AND ts.created_by = :userId " // will be developed further
+    value = "SELECT ts from Section ts INNER JOIN ArticleSection tas \n" +
+    "ON ts.id = tas.sectionId WHERE ts.id = :sectionId \n" +
+    "AND tas.deletedDate IS NULL \n " +
+    "AND ts.createdBy = :extractedUsername"
   )
-  Optional<Section> findSectionIdOnArticleSection(String sectionId, String userId);
+  List<Section> findSectionIdOnArticleSection(Long sectionId, String extractedUsername);
 
   @Query(
-    value = "SELECT ts from Section INNER JOIN ArticleSection tas \n" +
-    "ON ts.id = tas.section_id WHERE :sectionTitle = ts.title" +
-    "AND tas.deleted_date = null " +
-    "AND ts.created_by = ':userId" // will be developed further
+    value = "SELECT ts from Section ts INNER JOIN ArticleSection tas \n" +
+    "ON ts.id = tas.sectionId WHERE ts.title = :sectionTitle \n" +
+    "AND tas.deletedDate IS NULL \n " +
+    "AND ts.createdBy = :extractedUsername"
   )
-  Optional<Section> findSectionTitleOnArticleSection(String sectionTitle, String userId);
+  List<Section> findSectionTitleOnArticleSection(String sectionTitle, String extractedUsername);
 
-  @Modifying
   @Query(
-    value = "INSERT INTO Section (id, title, body, created_by, created_from, " +
-    "deleted_date) values (nextval('tm_section_id_seq'::regclass), :sectionTitle, " +
-    "null, :userId, 'localhost', null)" //will developed further
+    value = "SELECT ts from Section ts WHERE ts.title = :sectionTitle AND createdBy = :extractedUsername " +
+    "ORDER BY ts.title ASC"
   )
-  void createSectionBySectionTitle(String sectionTitle, String userId);
+  List<Section> findSectionBySectionTitleAndUserLogin(String sectionTitle, String extractedUsername);
+
+  @Query(
+    value = "SELECT ts FROM Section ts WHERE ts.title = :sectionTitle " +
+    "AND ts.deletedDate IS NULL " +
+    "AND ts.createdBy = :extractedUsername "
+  )
+  Optional<Section> findSection(String sectionTitle, String extractedUsername);
 }

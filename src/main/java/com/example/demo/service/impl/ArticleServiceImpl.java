@@ -1,20 +1,21 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.constants.AppConstants;
 import com.example.demo.dto.*;
 import com.example.demo.entity.Article;
+import com.example.demo.entity.ArticleSection;
 import com.example.demo.entity.Section;
 import com.example.demo.exceptions.BadRequestException;
 import com.example.demo.exceptions.ConflictException;
 import com.example.demo.repository.ArticleRepository;
-import com.example.demo.repository.CreateArticleRepository;
+import com.example.demo.repository.ArticleSectionRepository;
 import com.example.demo.repository.SectionRepository;
 import com.example.demo.service.ArticleService;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,24 +28,19 @@ public class ArticleServiceImpl implements ArticleService {
   private SectionRepository sectionRepository;
 
   @Autowired
-  private CreateArticleRepository createArticleRepository;
-
-  @Autowired
-  public ArticleServiceImpl(ArticleRepository articleRepository) {
-    this.articleRepository = articleRepository;
-  }
+  private ArticleSectionRepository articleSectionRepository;
 
   @Override
-  public GeneralDataPaginationResponse<ArticleResponse> searchArticle(SearchArticleRequest request) {
-    if (request.getKeyword() == null || request.getKeyword().trim().length() < 3) {
-      return GeneralDataPaginationResponse
-        .<ArticleResponse>builder()
-        .pagination(new GeneralDataPaginationResponse.Pagination(0, 0))
-        .data(null)
-        .build();
-    }
+  public GeneralDataPaginationResponse<ArticleResponse> searchArticle(
+    SearchArticleRequest request,
+    String extractedUsername
+  ) {
+    SearchArticleRequest searchArticleRequest = SearchArticleRequest.builder().build();
 
-    List<ArticleResponse> articles = articleRepository.findArticleByKeyword(request.getKeyword());
+    List<ArticleResponse> articles = articleRepository.findArticleByKeyword(
+      searchArticleRequest.toString(),
+      extractedUsername
+    );
 
     return GeneralDataPaginationResponse
       .<ArticleResponse>builder()
@@ -54,8 +50,8 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   @Override
-  public GeneralDataPaginationResponse<ArticleResponse> findAll() {
-    List<ArticleResponse> articles = articleRepository.findAllArticles();
+  public GeneralDataPaginationResponse<ArticleResponse> findAll(String extractedUsername) {
+    List<ArticleResponse> articles = articleRepository.findAllArticlesByUserLogin(extractedUsername);
 
     return GeneralDataPaginationResponse
       .<ArticleResponse>builder()
@@ -65,71 +61,92 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   @Override
-  public CreateArticleResponse createArticle(CreateArticleRequest request) {
-    if (!request.getSectionId().isEmpty()) {
-      checkSectionId(request.getSectionId(), request.getUserId());
-    }
-    if (!request.getSectionTitle().isEmpty()) {
-      checkSectionTitle(request.getSectionTitle(), request.getUserId());
-    }
+  public CreateArticleResponse createArticle(CreateArticleRequest request, String extractedUsername) {
+    Long sectionId = request.getSectionId();
+    String sectionTitle = request.getSectionTitle();
+    String articleTitle = request.getArticleTitle();
 
-    checkArticle(request.getArticleTitle(), request.getUserId()); //check article already on db or not
-
-    CreateArticleResponse newArticle = new CreateArticleResponse();
-    newArticle.setSectionTitle(request.getSectionTitle());
-    newArticle.setArticleTitle(request.getArticleTitle());
-    newArticle.setBody(request.getBody());
-    newArticle.setCreatedBy(request.getUserId()); // will be developed further
-    newArticle.setCreatedDate(LocalDateTime.now(ZoneId.systemDefault()));
-    newArticle.setCreatedFrom("localhost"); // will be developed further
-
-    return createArticleRepository.save(newArticle);
-  }
-
-  @Override
-  public UpdateArticleResponse updateArticle(UpdateArticleRequest request) {
-
-    if (!request.getSectionTitle().isEmpty()) {
-      checkSectionTitle(request.getSectionTitle(), request.getUserId());
+    // check article created by section id or section title
+    if (sectionId != null && (sectionTitle == null || !sectionTitle.isEmpty())) {
+      checkSectionId(sectionId, extractedUsername);
+    } else if (sectionId == null && sectionTitle != null && !sectionTitle.isEmpty()) {
+      sectionId = checkSectionTitle(sectionTitle, extractedUsername);
+    } else if (sectionId == null && sectionTitle == null) {
+      throw new BadRequestException("Please Input valid Section Id or Section Title");
     }
 
-    checkArticle(request.getArticleTitle(), request.getUserId());
-    UpdateArticleResponse
-            .builder()
-            .articleTitle(request.getArticleTitle())
-            .sectionTitle(request.getSectionTitle())
-            .body(request.getBody())
-            .updatedBy(request.getUserId())
-            .updatedDate(LocalDateTime.now(ZoneId.systemDefault()))
-            .updatedFrom("localhost")
+    //check article already on db or not
+    checkArticle(request.getArticleTitle(), extractedUsername); //check article already on db or not
+
+    // build new article
+    Article newArticle = Article.builder().title(request.getArticleTitle()).body(request.getBody()).build();
+    newArticle.setCreatedBy(extractedUsername);
+    newArticle.setCreatedFrom(extractedUsername);
+    newArticle.setCreatedDate(ZonedDateTime.now(AppConstants.ZONE_ID));
+
+    articleRepository.save(newArticle);
+
+    // check article id
+    Article articles = articleRepository.findArticle(articleTitle, extractedUsername);
+    Long articleId = articles.getId();
+
+    // save article to article section db
+    ArticleSection articleSection = ArticleSection.builder()
+            .articleId(articleId)
+            .sectionId(sectionId)
             .build();
 
-    return articleRepository.updateArticle(
-            request.getArticleTitle(),
-            request.getSectionTitle(),
-            request.getBody()
-    );
+    articleSection.setCreatedBy(extractedUsername);
+    articleSection.setCreatedFrom(extractedUsername);
+    articleSection.setCreatedDate(ZonedDateTime.now(AppConstants.ZONE_ID));
+
+    articleSectionRepository.save(articleSection);
+
+    // return response on creating article
+    return CreateArticleResponse
+      .builder()
+      .articleTitle(request.getArticleTitle())
+      .sectionTitle(request.getSectionTitle())
+      .body(request.getBody())
+      .build();
   }
 
-  private void checkArticle(String articleTitle, String userId) {
-    Optional<Article> articleSection = articleRepository.findArticleOnDatabase(articleTitle, userId);
-
+  private void checkArticle(String articleTitle, String extractedUsername) {
+    Optional<Article> articleSection = articleRepository.findArticleOnArticleSection(articleTitle, extractedUsername);
+    // check article already on db or not
     if (articleSection.isPresent()) {
       throw new ConflictException("Article already exist");
     }
   }
 
-  private void checkSectionId(String sectionId, String userId) {
-    Optional<Section> sectionById = sectionRepository.findSectionIdOnArticleSection(sectionId, userId);
+  private void checkSectionId(Long sectionId, String extractedUsername) {
+    List<Section> sectionById = sectionRepository.findSectionIdOnArticleSection(sectionId, extractedUsername);
+    // check section by id already on db or not
     if (sectionById.isEmpty()) {
       throw new BadRequestException("Section not available on Database");
     }
   }
 
-  private void checkSectionTitle(String sectionTitle, String userId) {
-    Optional<Section> sectionByTitle = sectionRepository.findSectionTitleOnArticleSection(sectionTitle, userId);
+  private Long checkSectionTitle(String sectionTitle, String extractedUsername) {
+    List<Section> sectionByTitle = sectionRepository.findSectionBySectionTitleAndUserLogin(
+      sectionTitle,
+      extractedUsername
+    );
+    // check section title already on db or not, if not, create section by title
+    Long sectionId;
     if (sectionByTitle.isEmpty()) {
-      sectionRepository.createSectionBySectionTitle(sectionTitle, userId);
+      Section createSection = Section.builder().title(sectionTitle).build();
+      createSection.setCreatedBy(extractedUsername);
+      createSection.setCreatedFrom(extractedUsername);
+      createSection.setCreatedDate(ZonedDateTime.now(AppConstants.ZONE_ID));
+      sectionRepository.save(createSection);
+
+      Optional<Section> sections = sectionRepository.findSection(sectionTitle, extractedUsername);
+      assert sections.orElse(null) != null;
+      sectionId = sections.orElse(null).getId();
+    } else {
+      sectionId = sectionByTitle.get(0).getId(); // Assuming the list has only one element
     }
+    return sectionId;
   }
 }
