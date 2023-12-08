@@ -8,4 +8,6 @@ public interface ArticleService {
   GeneralDataPaginationResponse<ArticleResponse> findAll(String extractedUsername);
 
   CreateArticleResponse createArticle(CreateArticleRequest request, String extractedUsername);
+
+  UpdateArticleResponse updateArticle(UpdateArticleRequest request, String extractedUsername);
 }

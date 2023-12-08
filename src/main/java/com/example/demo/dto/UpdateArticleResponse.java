@@ -1,14 +1,12 @@
 package com.example.demo.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.ZonedDateTime;
+import javax.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-
-import javax.persistence.Column;
-import java.time.LocalDateTime;
 
 @Builder
 @AllArgsConstructor
@@ -26,7 +24,7 @@ public class UpdateArticleResponse {
 
   @CreationTimestamp
   @Column(name = "updated_date")
-  protected LocalDateTime updatedDate;
+  protected ZonedDateTime updatedDate;
 
   @Column(name = "updated_by")
   private String updatedBy;
@@ -34,5 +32,6 @@ public class UpdateArticleResponse {
   @Column(name = "updated_from")
   private String updatedFrom;
 
-
+  @JsonProperty(value = "message")
+  private String message;
 }
