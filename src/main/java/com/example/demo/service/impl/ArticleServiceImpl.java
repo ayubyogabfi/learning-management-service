@@ -6,12 +6,10 @@ import com.example.demo.entity.Article;
 import com.example.demo.entity.ArticleSection;
 import com.example.demo.entity.Section;
 import com.example.demo.exceptions.BadRequestException;
-import com.example.demo.exceptions.ConflictException;
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.repository.ArticleSectionRepository;
 import com.example.demo.repository.SectionRepository;
 import com.example.demo.service.ArticleService;
-
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -67,11 +65,11 @@ public class ArticleServiceImpl implements ArticleService {
     String articleTitle = request.getArticleTitle();
 
     // check article created by section id or section title
-    if (sectionId != null && (sectionTitle == null || !sectionTitle.isEmpty())) {
+    if (sectionId != 0 && (sectionTitle == null || !sectionTitle.isEmpty())) {
       checkSectionId(sectionId, extractedUsername);
-    } else if (sectionId == null && sectionTitle != null && !sectionTitle.isEmpty()) {
+    } else if (sectionId == 0 && sectionTitle != null && !sectionTitle.isEmpty()) {
       sectionId = checkSectionTitle(sectionTitle, extractedUsername);
-    } else if (sectionId == null && sectionTitle == null) {
+    } else if (sectionId == 0 && sectionTitle == null) {
       throw new BadRequestException("Please Input valid Section Id or Section Title");
     }
 
@@ -91,10 +89,7 @@ public class ArticleServiceImpl implements ArticleService {
     Long articleId = articles.getId();
 
     // save article to article section db
-    ArticleSection articleSection = ArticleSection.builder()
-            .articleId(articleId)
-            .sectionId(sectionId)
-            .build();
+    ArticleSection articleSection = ArticleSection.builder().articleId(articleId).sectionId(sectionId).build();
 
     articleSection.setCreatedBy(extractedUsername);
     articleSection.setCreatedFrom(extractedUsername);
@@ -108,6 +103,47 @@ public class ArticleServiceImpl implements ArticleService {
       .articleTitle(request.getArticleTitle())
       .sectionTitle(request.getSectionTitle())
       .body(request.getBody())
+      .message("Article Successfully created")
+      .build();
+  }
+
+  @Override
+  public UpdateArticleResponse updateArticle(UpdateArticleRequest request, String extractedUsername) {
+    Long articleSectionId = request.getArticleSectionId();
+    String sectionTitle = request.getSectionTitle();
+    String articleTitle = request.getArticleTitle();
+    String body = request.getBody();
+
+    // checking article section id already on db or not
+    if (articleSectionId == 0) {
+      throw new BadRequestException("Article Section Id Must Not Null");
+    }
+
+    // check if articleSectionId have content or not
+    List<Article> articleSectionsList = articleRepository.findArticleByArticleSectionId(
+      articleSectionId,
+      extractedUsername
+    );
+    if (articleSectionsList.isEmpty()) {
+      throw new InternalError("Article Section Id not available");
+    }
+
+    Long sectionId = checkSectionTitle(sectionTitle, extractedUsername);
+    Long articleId = checkArticleId(articleSectionId, extractedUsername);
+
+    articleSectionRepository.updateArticleSectionById(articleSectionId, sectionId, extractedUsername);
+
+    articleRepository.updateArticle(articleId, articleTitle, body, extractedUsername);
+
+    return UpdateArticleResponse
+      .builder()
+      .message("Article Successfully Updated")
+      .articleTitle(articleTitle)
+      .sectionTitle(sectionTitle)
+      .body(body)
+      .updatedDate(ZonedDateTime.now(AppConstants.ZONE_ID))
+      .updatedBy(extractedUsername)
+      .updatedFrom(extractedUsername)
       .build();
   }
 
@@ -115,15 +151,21 @@ public class ArticleServiceImpl implements ArticleService {
     Optional<Article> articleSection = articleRepository.findArticleOnArticleSection(articleTitle, extractedUsername);
     // check article already on db or not
     if (articleSection.isPresent()) {
-      throw new ConflictException("Article already exist");
+      throw new InternalError("Article already exist");
     }
+  }
+
+  private Long checkArticleId(Long articleSectionId, String extractedUsername) {
+    ArticleSection articleSection = articleSectionRepository.findOneByArticleSectionId(articleSectionId, extractedUsername);
+    // find articleId
+    return articleSection.getArticleId();
   }
 
   private void checkSectionId(Long sectionId, String extractedUsername) {
     List<Section> sectionById = sectionRepository.findSectionIdOnArticleSection(sectionId, extractedUsername);
     // check section by id already on db or not
     if (sectionById.isEmpty()) {
-      throw new BadRequestException("Section not available on Database");
+      throw new InternalError("Section not available on Database");
     }
   }
 

@@ -3,7 +3,6 @@ package com.example.demo.entity;
 import java.time.ZonedDateTime;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 

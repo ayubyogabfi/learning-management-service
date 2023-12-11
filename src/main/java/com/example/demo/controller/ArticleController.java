@@ -111,4 +111,35 @@ public class ArticleController {
     }
     return ResponseEntity.ok(response);
   }
+
+  @Operation(
+    security = { @SecurityRequirement(name = "bearer-key") },
+    summary = "Update an article",
+    description = "Update an article"
+  )
+  @PutMapping("/v1/update")
+  public ResponseEntity<UpdateArticleResponse> updateArticle(
+    @Valid @RequestBody UpdateArticleRequest request,
+    @RequestHeader("Authorization") String authorizationHeader
+  ) {
+    UpdateArticleResponse response;
+    try {
+      String extractedToken = jwtService.extractBearerToken(authorizationHeader);
+
+      if (extractedToken == null || extractedToken.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+      }
+
+      String extractedUsername = jwtService.extractUsername(extractedToken);
+
+      if (extractedUsername == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+      }
+
+      response = articleService.updateArticle(request, extractedUsername);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+    return ResponseEntity.ok(response);
+  }
 }

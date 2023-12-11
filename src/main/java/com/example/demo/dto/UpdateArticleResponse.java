@@ -3,13 +3,15 @@ package com.example.demo.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.ZonedDateTime;
 import javax.persistence.Column;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateArticleResponse {
+public class UpdateArticleResponse {
 
   @JsonProperty(value = "section_title")
   private String sectionTitle;
@@ -21,15 +23,15 @@ public class CreateArticleResponse {
   private String body;
 
   @CreationTimestamp
-  @Column(name = "created_date", updatable = false, nullable = false)
-  protected ZonedDateTime createdDate;
+  @Column(name = "updated_date")
+  protected ZonedDateTime updatedDate;
 
-  @Column(name = "created_by")
-  private String createdBy;
+  @Column(name = "updated_by")
+  private String updatedBy;
 
-  @Column(name = "created_from")
-  private String createdFrom;
+  @Column(name = "updated_from")
+  private String updatedFrom;
 
-  @Column(name = "message")
+  @JsonProperty(value = "message")
   private String message;
 }
