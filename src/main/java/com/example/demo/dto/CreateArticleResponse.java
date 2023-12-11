@@ -29,4 +29,7 @@ public class CreateArticleResponse {
 
   @Column(name = "created_from")
   private String createdFrom;
+
+  @Column(name = "message")
+  private String message;
 }

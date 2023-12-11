@@ -3,6 +3,8 @@ package com.example.demo.repository;
 import com.example.demo.dto.ArticleResponse;
 import com.example.demo.entity.Article;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -35,10 +37,9 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpec
   @Query(
     value = "SELECT ta FROM Article ta INNER JOIN ArticleSection tas " +
     "ON ta.id = tas.articleId WHERE ta.title = :articleTitle " +
-    "AND tas.deletedDate IS NULL " +
-    "AND ta.createdBy = :extractedUsername "
+    "AND tas.deletedDate IS NULL AND ta.createdBy = :extractedUsername "
   )
-  List<Article> findArticleOnArticleSection(@Param("articleTitle") String articleTitle, String extractedUsername);
+  Optional<Article> findArticleOnArticleSection(@Param("articleTitle") String articleTitle, String extractedUsername);
 
   @Query(
     value = "SELECT ta FROM Article ta WHERE ta.title = :articleTitle " +
@@ -50,15 +51,15 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpec
   @Transactional
   @Modifying
   @Query(
-    value = "UPDATE Article ta SET ta.title = :newArticleTitle, ta.body = :body, " +
+    value = "UPDATE Article ta SET ta.title = :articleTitle, ta.body = :body, " +
     "ta.updatedDate = CURRENT_TIMESTAMP, ta.updatedBy = :extractedUsername, " +
     "ta.updatedFrom = :extractedUsername " +
-    "WHERE ta.title = :oldArticleTitle AND ta.deletedDate IS NULL " +
+    "WHERE ta.id = :articleId AND ta.deletedDate IS NULL " +
     "AND ta.createdBy = :extractedUsername"
   )
   void updateArticle(
-    @Param("newArticleTitle") String newArticleTitle,
-    @Param("oldArticleTitle") String oldArticleTitle,
+    @Param("articleId") Long articleId,
+    @Param("articleTitle") String articleTitle,
     @Param("body") String body,
     @Param("extractedUsername") String extractedUsername
   );

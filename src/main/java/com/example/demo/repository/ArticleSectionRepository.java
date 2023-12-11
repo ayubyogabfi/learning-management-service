@@ -19,4 +19,9 @@ public interface ArticleSectionRepository
     "AND tas.createdBy = :extractedUsername"
   )
   void updateArticleSectionById(Long articleSectionId, Long sectionId, String extractedUsername);
+
+  @Query(
+    value = "SELECT tas FROM ArticleSection tas WHERE tas.id = :articleSectionId " +
+            "AND createdBy = :extractedUsername")
+  ArticleSection findOneByArticleSectionId(Long articleSectionId, String extractedUsername);
 }

@@ -12,7 +12,6 @@ import com.example.demo.repository.SectionRepository;
 import com.example.demo.service.ArticleService;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,11 +65,11 @@ public class ArticleServiceImpl implements ArticleService {
     String articleTitle = request.getArticleTitle();
 
     // check article created by section id or section title
-    if (sectionId != null && (sectionTitle == null || !sectionTitle.isEmpty())) {
+    if (sectionId != 0 && (sectionTitle == null || !sectionTitle.isEmpty())) {
       checkSectionId(sectionId, extractedUsername);
-    } else if (sectionId == null && sectionTitle != null && !sectionTitle.isEmpty()) {
+    } else if (sectionId == 0 && sectionTitle != null && !sectionTitle.isEmpty()) {
       sectionId = checkSectionTitle(sectionTitle, extractedUsername);
-    } else if (sectionId == null && sectionTitle == null) {
+    } else if (sectionId == 0 && sectionTitle == null) {
       throw new BadRequestException("Please Input valid Section Id or Section Title");
     }
 
@@ -104,6 +103,7 @@ public class ArticleServiceImpl implements ArticleService {
       .articleTitle(request.getArticleTitle())
       .sectionTitle(request.getSectionTitle())
       .body(request.getBody())
+      .message("Article Successfully created")
       .build();
   }
 
@@ -111,7 +111,7 @@ public class ArticleServiceImpl implements ArticleService {
   public UpdateArticleResponse updateArticle(UpdateArticleRequest request, String extractedUsername) {
     Long articleSectionId = request.getArticleSectionId();
     String sectionTitle = request.getSectionTitle();
-    String newArticleTitle = request.getArticleTitle();
+    String articleTitle = request.getArticleTitle();
     String body = request.getBody();
 
     // checking article section id already on db or not
@@ -129,19 +129,16 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     Long sectionId = checkSectionTitle(sectionTitle, extractedUsername);
+    Long articleId = checkArticleId(articleSectionId, extractedUsername);
 
     articleSectionRepository.updateArticleSectionById(articleSectionId, sectionId, extractedUsername);
-    String oldArticleTitle = articleSectionsList.get(0).getTitle();
-    if (!Objects.equals(newArticleTitle, oldArticleTitle)) {
-      articleRepository.updateArticle(newArticleTitle, oldArticleTitle, body, extractedUsername);
-    } else {
-      articleRepository.updateArticle(newArticleTitle, newArticleTitle, body, extractedUsername);
-    }
+
+    articleRepository.updateArticle(articleId, articleTitle, body, extractedUsername);
 
     return UpdateArticleResponse
       .builder()
       .message("Article Successfully Updated")
-      .articleTitle(newArticleTitle)
+      .articleTitle(articleTitle)
       .sectionTitle(sectionTitle)
       .body(body)
       .updatedDate(ZonedDateTime.now(AppConstants.ZONE_ID))
@@ -151,11 +148,17 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   private void checkArticle(String articleTitle, String extractedUsername) {
-    List<Article> articleSection = articleRepository.findArticleOnArticleSection(articleTitle, extractedUsername);
+    Optional<Article> articleSection = articleRepository.findArticleOnArticleSection(articleTitle, extractedUsername);
     // check article already on db or not
-    if (!articleSection.isEmpty()) {
+    if (articleSection.isPresent()) {
       throw new InternalError("Article already exist");
     }
+  }
+
+  private Long checkArticleId(Long articleSectionId, String extractedUsername) {
+    ArticleSection articleSection = articleSectionRepository.findOneByArticleSectionId(articleSectionId, extractedUsername);
+    // find articleId
+    return articleSection.getArticleId();
   }
 
   private void checkSectionId(Long sectionId, String extractedUsername) {
