@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/v1/section")
 public class SectionController {
 
   @Autowired
@@ -31,7 +32,7 @@ public class SectionController {
     summary = "Get all section",
     description = "Get all section list"
   )
-  @GetMapping("/v1/section-list")
+  @GetMapping
   public ResponseEntity<GeneralDataPaginationResponse<SectionResponseData>> getAllSections(
     @RequestHeader("Authorization") String authorizationHeader
   ) {
@@ -72,8 +73,8 @@ public class SectionController {
     summary = "Delete an section",
     description = "Delete an section"
   )
-  @DeleteMapping("/v1/delete-section")
-  public ResponseEntity<DeleteSectionResponse> deleteArticle(
+  @DeleteMapping
+  public ResponseEntity<DeleteSectionResponse> deleteSection(
     @Valid @RequestBody DeleteSectionRequest request,
     @RequestHeader("Authorization") String authorizationHeader
   ) {

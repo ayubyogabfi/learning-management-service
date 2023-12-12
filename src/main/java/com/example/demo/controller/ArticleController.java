@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/v1/article")
 public class ArticleController {
 
   @Autowired
@@ -25,7 +26,7 @@ public class ArticleController {
     summary = "Get article list (by user logged in)",
     description = "Get article list (by user logged in)"
   )
-  @GetMapping("/v1/article-list")
+  @GetMapping
   public ResponseEntity<GeneralDataPaginationResponse<ArticleResponse>> findAllArticles(
     @RequestHeader("Authorization") String authorizationHeader
   ) {
@@ -55,7 +56,7 @@ public class ArticleController {
     summary = "Get article by keyword (by user logged in)",
     description = "Get article by keyword (by user logged in)"
   )
-  @PostMapping(value = "/v1/article-list/{article-title}")
+  @PostMapping(value = "/{article-title}")
   public ResponseEntity<GeneralDataPaginationResponse<ArticleResponse>> searchArticle(
     @Valid @RequestBody SearchArticleRequest request,
     @RequestHeader("Authorization") String authorizationHeader
@@ -86,7 +87,7 @@ public class ArticleController {
     summary = "Create an article",
     description = "Create an article"
   )
-  @PostMapping("/v1/create-article")
+  @PostMapping
   public ResponseEntity<CreateArticleResponse> createArticle(
     @Valid @RequestBody CreateArticleRequest request,
     @RequestHeader("Authorization") String authorizationHeader
@@ -117,7 +118,7 @@ public class ArticleController {
     summary = "Update an article",
     description = "Update an article"
   )
-  @PutMapping("/v1/update-article")
+  @PutMapping
   public ResponseEntity<UpdateArticleResponse> updateArticle(
     @Valid @RequestBody UpdateArticleRequest request,
     @RequestHeader("Authorization") String authorizationHeader
@@ -148,7 +149,7 @@ public class ArticleController {
     summary = "Delete an article",
     description = "Delete an article"
   )
-  @DeleteMapping("/v1/delete-article")
+  @DeleteMapping
   public ResponseEntity<DeleteArticleResponse> deleteArticle(
     @Valid @RequestBody DeleteArticleRequest request,
     @RequestHeader("Authorization") String authorizationHeader
