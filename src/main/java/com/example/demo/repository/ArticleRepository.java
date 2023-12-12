@@ -20,7 +20,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpec
     "INNER JOIN Section ts ON tas.sectionId = ts.id\n" +
     "WHERE (ta.title LIKE CONCAT('%', :keyword, '%') \n" +
     "OR ts.title LIKE CONCAT('%', :keyword, '%') \n" +
-    "OR ta.body LIKE CONCAT('%', :keyword, '%'" +
+    "OR ta.body LIKE CONCAT('%', :keyword, '%' " +
     "AND createdBy = :extractedUsername ))"
   )
   List<ArticleResponse> findArticleByKeyword(@Param("keyword") String keyword, String extractedUsername);
@@ -29,7 +29,8 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpec
     value = "SELECT tas FROM ArticleSection tas\n" +
     "INNER JOIN Article ta ON ta.id = tas.articleId\n" +
     "INNER JOIN Section ts ON tas.sectionId = ts.id\n" +
-    "WHERE ta.createdBy = :extractedUsername"
+    "WHERE ta.createdBy = :extractedUsername " +
+    "AND tas.deletedDate IS NULL "
   )
   List<ArticleResponse> findAllArticlesByUserLogin(String extractedUsername);
 
