@@ -16,13 +16,13 @@ public interface ArticleSectionRepository
     "tas.updatedDate = CURRENT_TIMESTAMP, tas.updatedBy = :extractedUsername, \n" +
     "tas.updatedFrom = :extractedUsername \n" +
     "WHERE tas.id = :articleSectionId AND tas.deletedDate IS NULL \n" +
-    "AND tas.createdBy = :extractedUsername"
+    "AND tas.createdBy = :extractedUsername "
   )
   void updateArticleSectionById(Long articleSectionId, Long sectionId, String extractedUsername);
 
   @Query(
     value = "SELECT tas FROM ArticleSection tas WHERE tas.id = :articleSectionId " +
-    "AND createdBy = :extractedUsername"
+    "AND createdBy = :extractedUsername AND tas.deletedDate IS NULL"
   )
   ArticleSection findOneByArticleSectionId(Long articleSectionId, String extractedUsername);
 
@@ -31,7 +31,7 @@ public interface ArticleSectionRepository
   @Query(
     value = "UPDATE ArticleSection tas SET tas.deletedDate = CURRENT_TIMESTAMP, \n" +
     "tas.updatedBy = :extractedUsername " +
-    "WHERE tas.articleId = :articleId AND tas.createdBy = :extractedUsername"
+    "WHERE tas.articleId = :articleId AND tas.createdBy = :extractedUsername "
   )
   void deleteArticleSectionByArticleId(Long articleId, String extractedUsername);
 
@@ -41,7 +41,8 @@ public interface ArticleSectionRepository
     value = "UPDATE ArticleSection tas SET tas.sectionId = NULL, \n" +
     "tas.updatedBy = :extractedUsername, tas.updatedDate = CURRENT_TIMESTAMP, " +
     "tas.updatedFrom = :extractedUsername \n" +
-    "WHERE tas.sectionId = :sectionId AND tas.createdBy = :extractedUsername"
+    "WHERE tas.sectionId = :sectionId AND tas.createdBy = :extractedUsername " +
+    "AND tas.deletedDate IS NULL"
   )
   void deleteArticleSectionBySectionId(Long sectionId, String extractedUsername);
 }

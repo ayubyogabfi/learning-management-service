@@ -129,7 +129,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     Long sectionId = checkSectionTitle(sectionTitle, extractedUsername);
-    Long articleId = checkArticleToDelete(articleSectionId, extractedUsername);
+    Long articleId = checkArticleId(articleSectionId, extractedUsername);
 
     articleSectionRepository.updateArticleSectionById(articleSectionId, sectionId, extractedUsername);
 
@@ -179,7 +179,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
   }
 
-  private Long checkArticleToDelete(Long articleSectionId, String extractedUsername) {
+  private Long checkArticleId(Long articleSectionId, String extractedUsername) {
     ArticleSection articleSection = articleSectionRepository.findOneByArticleSectionId(
       articleSectionId,
       extractedUsername
