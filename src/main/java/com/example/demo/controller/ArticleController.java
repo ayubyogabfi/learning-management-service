@@ -117,7 +117,7 @@ public class ArticleController {
     summary = "Update an article",
     description = "Update an article"
   )
-  @PutMapping("/v1/update")
+  @PutMapping("/v1/update-article")
   public ResponseEntity<UpdateArticleResponse> updateArticle(
     @Valid @RequestBody UpdateArticleRequest request,
     @RequestHeader("Authorization") String authorizationHeader
@@ -137,6 +137,37 @@ public class ArticleController {
       }
 
       response = articleService.updateArticle(request, extractedUsername);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+    return ResponseEntity.ok(response);
+  }
+
+  @Operation(
+    security = { @SecurityRequirement(name = "bearer-key") },
+    summary = "Delete an article",
+    description = "Delete an article"
+  )
+  @DeleteMapping("/v1/delete-article")
+  public ResponseEntity<DeleteArticleResponse> deleteArticle(
+    @Valid @RequestBody DeleteArticleRequest request,
+    @RequestHeader("Authorization") String authorizationHeader
+  ) {
+    DeleteArticleResponse response;
+    try {
+      String extractedToken = jwtService.extractBearerToken(authorizationHeader);
+
+      if (extractedToken == null || extractedToken.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+      }
+
+      String extractedUsername = jwtService.extractUsername(extractedToken);
+
+      if (extractedUsername == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+      }
+
+      response = articleService.deleteArticle(request, extractedUsername);
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }

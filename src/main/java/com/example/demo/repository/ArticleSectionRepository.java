@@ -22,6 +22,25 @@ public interface ArticleSectionRepository
 
   @Query(
     value = "SELECT tas FROM ArticleSection tas WHERE tas.id = :articleSectionId " +
-            "AND createdBy = :extractedUsername")
+    "AND createdBy = :extractedUsername"
+  )
   ArticleSection findOneByArticleSectionId(Long articleSectionId, String extractedUsername);
+
+  @Transactional
+  @Modifying
+  @Query(
+    value = "UPDATE ArticleSection tas SET tas.deletedDate = CURRENT_TIMESTAMP, \n" +
+    "tas.updatedBy = :extractedUsername " +
+    "WHERE tas.articleId = :articleId AND tas.createdBy = :extractedUsername"
+  )
+  void deleteArticleSectionByArticleId(Long articleId, String extractedUsername);
+
+  @Transactional
+  @Modifying
+  @Query(
+    value = "UPDATE ArticleSection tas SET tas.deletedDate = CURRENT_TIMESTAMP, \n" +
+    "tas.updatedBy = :extractedUsername " +
+    "WHERE tas.sectionId = :sectionId AND tas.createdBy = :extractedUsername"
+  )
+  void deleteArticleSectionBySectionId(Long sectionId, String extractedUsername);
 }

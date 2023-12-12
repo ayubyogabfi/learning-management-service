@@ -4,7 +4,6 @@ import com.example.demo.dto.ArticleResponse;
 import com.example.demo.entity.Article;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -71,4 +70,19 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpec
     "AND ta.createdBy = :extractedUsername "
   )
   List<Article> findArticleByArticleSectionId(Long articleSectionId, String extractedUsername);
+
+  @Query(
+    value = "SELECT ta from Article ta WHERE ta.id = :articleId " +
+    "AND ta.createdBy = :extractedUsername AND ta.deletedDate IS NULL"
+  )
+  Article findArticleByArticleId(Long articleId, String extractedUsername);
+
+  @Transactional
+  @Modifying
+  @Query(
+    value = "UPDATE Article ta SET ta.deletedDate = CURRENT_TIMESTAMP, ta.updatedBy = :extractedUsername " +
+    "WHERE ta.id = :articleId AND ta.deletedDate IS NULL " +
+    "AND ta.createdBy = :extractedUsername"
+  )
+  void deleteArticle(@Param("articleId") Long articleId, @Param("extractedUsername") String extractedUsername);
 }

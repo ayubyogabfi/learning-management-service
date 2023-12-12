@@ -10,4 +10,6 @@ public interface ArticleService {
   CreateArticleResponse createArticle(CreateArticleRequest request, String extractedUsername);
 
   UpdateArticleResponse updateArticle(UpdateArticleRequest request, String extractedUsername);
+
+  DeleteArticleResponse deleteArticle(DeleteArticleRequest request, String extractedUsername);
 }
