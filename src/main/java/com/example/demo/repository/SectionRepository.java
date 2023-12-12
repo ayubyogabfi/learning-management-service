@@ -1,6 +1,5 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.Article;
 import com.example.demo.entity.Section;
 import java.util.List;
 import java.util.Optional;
@@ -23,15 +22,6 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
     "AND ts.createdBy = :extractedUsername"
   )
   List<Section> findSectionIdOnArticleSection(Long sectionId, String extractedUsername);
-
-  @Query(
-    value = "SELECT ts from Section ts INNER JOIN ArticleSection tas \n" +
-    "ON ts.id = tas.sectionId WHERE ts.title = :sectionTitle \n" +
-    "AND tas.deletedDate IS NULL \n " +
-    "AND ts.createdBy = :extractedUsername"
-  )
-  List<Section> findSectionTitleOnArticleSection(String sectionTitle, String extractedUsername);
-
   @Query(
     value = "SELECT ts from Section ts WHERE ts.title = :sectionTitle AND createdBy = :extractedUsername " +
     "ORDER BY ts.title ASC"

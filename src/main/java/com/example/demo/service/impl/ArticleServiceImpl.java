@@ -129,7 +129,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     Long sectionId = checkSectionTitle(sectionTitle, extractedUsername);
-    Long articleId = checkArticleId(articleSectionId, extractedUsername);
+    Long articleId = checkArticleToDelete(articleSectionId, extractedUsername);
 
     articleSectionRepository.updateArticleSectionById(articleSectionId, sectionId, extractedUsername);
 
@@ -179,7 +179,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
   }
 
-  private Long checkArticleId(Long articleSectionId, String extractedUsername) {
+  private Long checkArticleToDelete(Long articleSectionId, String extractedUsername) {
     ArticleSection articleSection = articleSectionRepository.findOneByArticleSectionId(
       articleSectionId,
       extractedUsername
@@ -217,11 +217,5 @@ public class ArticleServiceImpl implements ArticleService {
       sectionId = sectionByTitle.get(0).getId(); // Assuming the list has only one element
     }
     return sectionId;
-  }
-
-  private Long checkArticleToDelete(Long articleId, String extractedUsername) {
-    ArticleSection articleSection = articleSectionRepository.findOneByArticleSectionId(articleId, extractedUsername);
-    // find articleId
-    return articleSection.getArticleId();
   }
 }
