@@ -61,15 +61,15 @@ public class UserController {
   @PostMapping("/v1/login")
   @Operation(summary = "User Login")
   @ApiResponses(
-          value = {
-                  @ApiResponse(responseCode = "200", description = "Login Successful"),
-                  @ApiResponse(responseCode = "401", description = "Invalid credentials"),
-                  @ApiResponse(
-                          responseCode = "400",
-                          description = "Bad Request",
-                          content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-                  ),
-          }
+    value = {
+      @ApiResponse(responseCode = "200", description = "Login Successful"),
+      @ApiResponse(responseCode = "401", description = "Invalid credentials"),
+      @ApiResponse(
+        responseCode = "400",
+        description = "Bad Request",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+      ),
+    }
   )
   public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
     try {
@@ -94,5 +94,4 @@ public class UserController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
   }
-
 }
