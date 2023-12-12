@@ -38,8 +38,9 @@ public interface ArticleSectionRepository
   @Transactional
   @Modifying
   @Query(
-    value = "UPDATE ArticleSection tas SET tas.deletedDate = CURRENT_TIMESTAMP, \n" +
-    "tas.updatedBy = :extractedUsername " +
+    value = "UPDATE ArticleSection tas SET tas.sectionId = NULL, \n" +
+    "tas.updatedBy = :extractedUsername, tas.updatedDate = CURRENT_TIMESTAMP, " +
+    "tas.updatedFrom = :extractedUsername \n" +
     "WHERE tas.sectionId = :sectionId AND tas.createdBy = :extractedUsername"
   )
   void deleteArticleSectionBySectionId(Long sectionId, String extractedUsername);
