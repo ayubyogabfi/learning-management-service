@@ -22,6 +22,7 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
     "AND ts.createdBy = :extractedUsername"
   )
   List<Section> findSectionIdOnArticleSection(Long sectionId, String extractedUsername);
+
   @Query(
     value = "SELECT ts from Section ts WHERE ts.title = :sectionTitle AND createdBy = :extractedUsername " +
     "ORDER BY ts.title ASC"

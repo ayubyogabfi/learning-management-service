@@ -1,10 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.auth.JwtService;
-import com.example.demo.dto.DeleteSectionRequest;
-import com.example.demo.dto.DeleteSectionResponse;
-import com.example.demo.dto.GeneralDataPaginationResponse;
-import com.example.demo.dto.SectionResponseData;
+import com.example.demo.dto.*;
 import com.example.demo.entity.Section;
 import com.example.demo.service.SectionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -70,8 +67,8 @@ public class SectionController {
 
   @Operation(
     security = { @SecurityRequirement(name = "bearer-key") },
-    summary = "Delete an section",
-    description = "Delete an section"
+    summary = "Delete a section",
+    description = "Delete a section"
   )
   @DeleteMapping
   public ResponseEntity<DeleteSectionResponse> deleteSection(
@@ -93,6 +90,37 @@ public class SectionController {
       }
 
       response = sectionService.deleteSection(request, extractedUsername);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+    return ResponseEntity.ok(response);
+  }
+
+  @Operation(
+    security = { @SecurityRequirement(name = "bearer-key") },
+    summary = "Create a section",
+    description = "Create a section"
+  )
+  @PostMapping
+  public ResponseEntity<CreateSectionResponse> createSection(
+    @Valid @RequestBody CreateSectionRequest request,
+    @RequestHeader("Authorization") String authorizationHeader
+  ) {
+    CreateSectionResponse response;
+    try {
+      String extractedToken = jwtService.extractBearerToken(authorizationHeader);
+
+      if (extractedToken == null || extractedToken.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+      }
+
+      String extractedUsername = jwtService.extractUsername(extractedToken);
+
+      if (extractedUsername == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+      }
+
+      response = sectionService.createSection(request, extractedUsername);
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
