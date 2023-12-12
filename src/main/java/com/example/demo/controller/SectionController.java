@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.auth.JwtService;
+import com.example.demo.dto.DeleteSectionRequest;
+import com.example.demo.dto.DeleteSectionResponse;
 import com.example.demo.dto.GeneralDataPaginationResponse;
 import com.example.demo.dto.SectionResponseData;
 import com.example.demo.entity.Section;
@@ -9,13 +11,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/section")
@@ -66,5 +66,36 @@ public class SectionController {
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+  }
+
+  @Operation(
+    security = { @SecurityRequirement(name = "bearer-key") },
+    summary = "Delete an section",
+    description = "Delete an section"
+  )
+  @DeleteMapping
+  public ResponseEntity<DeleteSectionResponse> deleteSection(
+    @Valid @RequestBody DeleteSectionRequest request,
+    @RequestHeader("Authorization") String authorizationHeader
+  ) {
+    DeleteSectionResponse response;
+    try {
+      String extractedToken = jwtService.extractBearerToken(authorizationHeader);
+
+      if (extractedToken == null || extractedToken.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+      }
+
+      String extractedUsername = jwtService.extractUsername(extractedToken);
+
+      if (extractedUsername == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+      }
+
+      response = sectionService.deleteSection(request, extractedUsername);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+    return ResponseEntity.ok(response);
   }
 }

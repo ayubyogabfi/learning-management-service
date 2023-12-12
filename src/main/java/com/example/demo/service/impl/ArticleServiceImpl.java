@@ -147,6 +147,30 @@ public class ArticleServiceImpl implements ArticleService {
       .build();
   }
 
+  @Override
+  public DeleteArticleResponse deleteArticle(DeleteArticleRequest request, String extractedUsername) {
+    Article articles = articleRepository.findArticleByArticleId(request.getArticleId(), extractedUsername);
+
+    if (articles == null || request.getArticleId() == 0) {
+      throw new InternalError("No Article To Delete");
+    }
+    Long articleId = request.getArticleId();
+    String articleTitle = articles.getTitle();
+    String body = articles.getBody();
+
+    articleRepository.deleteArticle(articleId, extractedUsername);
+
+    articleSectionRepository.deleteArticleSectionByArticleId(articleId, extractedUsername);
+
+    return DeleteArticleResponse
+      .builder()
+      .articleTitle(articleTitle)
+      .body(body)
+      .message("Article Successfully Deleted")
+      .deletedDate(ZonedDateTime.now(AppConstants.ZONE_ID))
+      .build();
+  }
+
   private void checkArticle(String articleTitle, String extractedUsername) {
     Optional<Article> articleSection = articleRepository.findArticleOnArticleSection(articleTitle, extractedUsername);
     // check article already on db or not
@@ -156,7 +180,10 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   private Long checkArticleId(Long articleSectionId, String extractedUsername) {
-    ArticleSection articleSection = articleSectionRepository.findOneByArticleSectionId(articleSectionId, extractedUsername);
+    ArticleSection articleSection = articleSectionRepository.findOneByArticleSectionId(
+      articleSectionId,
+      extractedUsername
+    );
     // find articleId
     return articleSection.getArticleId();
   }
