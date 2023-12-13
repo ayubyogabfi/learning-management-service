@@ -1,6 +1,5 @@
 package com.example.demo.repository;
 
-import com.example.demo.dto.ArticleResponse;
 import com.example.demo.entity.Article;
 import java.util.List;
 import java.util.Optional;
@@ -15,24 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpecificationExecutor<Article> {
   @Query(
-    "SELECT tas FROM ArticleSection tas\n" +
-    "INNER JOIN Article ta ON ta.id = tas.articleId\n" +
-    "INNER JOIN Section ts ON tas.sectionId = ts.id\n" +
-    "WHERE (ta.title LIKE CONCAT('%', :keyword, '%') \n" +
-    "OR ts.title LIKE CONCAT('%', :keyword, '%') \n" +
-    "OR ta.body LIKE CONCAT('%', :keyword, '%' " +
-    "AND createdBy = :extractedUsername ))"
+    "SELECT ta from Article ta WHERE ta.title LIKE CONCAT('%', :keyword, '%') " +
+    "AND ta.createdBy = :extractedUsername"
   )
-  List<ArticleResponse> findArticleByKeyword(@Param("keyword") String keyword, String extractedUsername);
+  List<Article> findArticleByKeyword(@Param("keyword") String keyword, String extractedUsername);
 
-  @Query(
-    value = "SELECT tas FROM ArticleSection tas\n" +
-    "INNER JOIN Article ta ON ta.id = tas.articleId\n" +
-    "INNER JOIN Section ts ON tas.sectionId = ts.id\n" +
-    "WHERE ta.createdBy = :extractedUsername " +
-    "AND tas.deletedDate IS NULL "
-  )
-  List<ArticleResponse> findAllArticlesByUserLogin(String extractedUsername);
+  @Query(value = "SELECT ta FROM Article ta WHERE ta.createdBy = :extractedUsername")
+  List<Article> findAllArticlesByExtractedUsername(String extractedUsername);
 
   @Query(
     value = "SELECT ta FROM Article ta INNER JOIN ArticleSection tas " +
