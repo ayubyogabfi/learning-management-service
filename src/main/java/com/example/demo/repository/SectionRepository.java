@@ -50,4 +50,15 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
     "AND ts.createdBy = :extractedUsername"
   )
   void deleteSection(@Param("sectionId") Long articleId, @Param("extractedUsername") String extractedUsername);
+
+  @Query(
+    value = "SELECT ts FROM ArticleSection tas" +
+    " INNER JOIN Section ts ON tas.sectionId = ts.id " +
+    " WHERE tas.createdBy = :extractedUsername AND " +
+    " tas.articleId IN :articleIds AND tas.deletedDate IS NULL"
+  )
+  List<Section> findSectionTitleByArticleId(
+    @Param("articleIds") List<Long> articleIds,
+    @Param("extractedUsername") String extractedUsername
+  );
 }

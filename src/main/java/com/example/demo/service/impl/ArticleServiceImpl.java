@@ -11,8 +11,10 @@ import com.example.demo.repository.ArticleSectionRepository;
 import com.example.demo.repository.SectionRepository;
 import com.example.demo.service.ArticleService;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,28 +35,57 @@ public class ArticleServiceImpl implements ArticleService {
     SearchArticleRequest request,
     String extractedUsername
   ) {
-    SearchArticleRequest searchArticleRequest = SearchArticleRequest.builder().build();
+    String keyword = request.getKeyword();
 
-    List<ArticleResponse> articles = articleRepository.findArticleByKeyword(
-      searchArticleRequest.toString(),
+    List<Article> articles = articleRepository.findArticleByKeyword(keyword, extractedUsername);
+
+    if (articles.isEmpty()) {
+      throw new InternalError("No Article Based On Your Request");
+    }
+
+    List<Section> sections = sectionRepository.findSectionTitleByArticleId(
+      articles.stream().map(Article::getId).collect(Collectors.toList()),
       extractedUsername
+    );
+
+    List<ArticleResponse> articleResponsesList = createArticleResponsesList(articles, sections);
+
+    GeneralDataPaginationResponse.Pagination pagination = new GeneralDataPaginationResponse.Pagination(
+      articleResponsesList.size(),
+      articleResponsesList.size()
     );
 
     return GeneralDataPaginationResponse
       .<ArticleResponse>builder()
-      .pagination(new GeneralDataPaginationResponse.Pagination(2, 2))
-      .data(articles)
+      .pagination(pagination)
+      .data(articleResponsesList)
       .build();
   }
 
   @Override
   public GeneralDataPaginationResponse<ArticleResponse> findAll(String extractedUsername) {
-    List<ArticleResponse> articles = articleRepository.findAllArticlesByUserLogin(extractedUsername);
+    List<Article> articles = articleRepository.findAllArticlesByExtractedUsername(extractedUsername);
+
+    if (articles.isEmpty()) {
+      throw new InternalError("No Article Based On Your Request");
+    }
+
+    List<Section> sections = sectionRepository.findSectionTitleByArticleId(
+      articles.stream().map(Article::getId).collect(Collectors.toList()),
+      extractedUsername
+    );
+
+    List<ArticleResponse> articleResponsesList = createArticleResponsesList(articles, sections);
+
+    GeneralDataPaginationResponse.Pagination pagination = new GeneralDataPaginationResponse.Pagination(
+      articleResponsesList.size(),
+      articleResponsesList.size()
+    );
 
     return GeneralDataPaginationResponse
       .<ArticleResponse>builder()
-      .pagination(new GeneralDataPaginationResponse.Pagination(2, 2))
-      .data(articles)
+      .pagination(pagination)
+      .data(articleResponsesList)
       .build();
   }
 
@@ -217,5 +248,36 @@ public class ArticleServiceImpl implements ArticleService {
       sectionId = sectionByTitle.get(0).getId(); // Assuming the list has only one element
     }
     return sectionId;
+  }
+
+  private List<ArticleResponse> createArticleResponsesList(List<Article> articles, List<Section> sections) {
+    List<Long> articleIds = articles.stream().map(Article::getId).collect(Collectors.toList());
+
+    List<String> articleTitles = articles.stream().map(Article::getTitle).collect(Collectors.toList());
+
+    List<String> articleBody = articles.stream().map(Article::getBody).collect(Collectors.toList());
+
+    List<String> sectionTitles = sections.stream().map(Section::getTitle).collect(Collectors.toList());
+
+    if (articleIds.isEmpty()) {
+      throw new InternalError("No Article Based On Your Request");
+    }
+
+    // Creating a list of ArticleResponse objects
+    List<ArticleResponse> articleResponsesList = new ArrayList<>();
+
+    // Assuming that articleTitles and sectionTitles have the same size
+    for (int i = 0; i < articleTitles.size(); i++) {
+      ArticleResponse articleResponse = ArticleResponse
+        .builder()
+        .articleTitle(articleTitles.get(i))
+        .body(articleBody.get(i))
+        .sectionTitle(sectionTitles.get(i))
+        .build();
+
+      articleResponsesList.add(articleResponse);
+    }
+
+    return articleResponsesList;
   }
 }
